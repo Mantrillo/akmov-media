@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AKMOV MEDIA - Streaming & Radio Online</title>
+  <meta name="description" content="Plataforma de streaming multimedia y radio online de alta definición. Transmisión en vivo 24/7 de música, cultura y medios digitales.">
+  
+  <!-- Google Fonts: Oswald (Brutalist, heavy) and Montserrat (Clean, professional) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+  <!-- FIXED NAVBAR -->
+  <header class="navbar">
+    <div class="navbar-container">
+      <a href="#" class="brand-logo-link" aria-label="AKMOV MEDIA Inicio">
+        <div class="logo-wrapper">
+          <span class="logo-akmov">AKMOV</span>
+          <span class="logo-media">MEDIA</span>
+          <svg class="logo-star" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9Z" />
+          </svg>
+        </div>
+      </a>
+      <nav class="nav-links">
+        <a href="#inicio" class="nav-item active">INICIO</a>
+        <a href="#programacion" class="nav-item">PROGRAMACIÓN</a>
+        <a href="#on-demand" class="nav-item">ON DEMAND</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="main-content">
+    
+    <!-- HERO SECTION: LIVE STREAMING PLAYER -->
+    <section id="inicio" class="hero-section">
+      <div class="player-container">
+        <!-- Neon Green Border Wrapper -->
+        <div class="monitor-wrapper">
+          <div class="live-player" id="mainVideoPlayer">
+            
+            <!-- Video Grid (4 Camera Split View) -->
+            <div class="video-grid">
+              
+              <!-- Cam 1: Main Host / Studio -->
+              <div class="cam-feed" id="feed-cam1">
+                <div class="cam-header">
+                  <span class="cam-name">CAM 01 - ESTUDIO PRINCIPAL</span>
+                  <span class="cam-status">LIVE</span>
+                </div>
+                <div class="cam-visualizer">
+                  <div class="studio-simulation">
+                    <div class="host-avatar"></div>
+                    <div class="mic-stand"></div>
+                  </div>
+                  <div class="wave-container">
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                  </div>
+                </div>
+                <div class="grid-overlay"></div>
+              </div>
+
+              <!-- Cam 2: DJ Booth / Audio Deck -->
+              <div class="cam-feed" id="feed-cam2">
+                <div class="cam-header">
+                  <span class="cam-name">CAM 02 - DJ BOOTH</span>
+                  <span class="cam-status">LIVE</span>
+                </div>
+                <div class="cam-visualizer">
+                  <div class="turntable-simulation">
+                    <div class="vinyl disc-1"></div>
+                    <div class="vinyl disc-2"></div>
+                  </div>
+                  <div class="wave-container">
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                  </div>
+                </div>
+                <div class="grid-overlay"></div>
+              </div>
+
+              <!-- Cam 3: Control Room / Console -->
+              <div class="cam-feed" id="feed-cam3">
+                <div class="cam-header">
+                  <span class="cam-name">CAM 03 - CONTROL DE MANDO</span>
+                  <span class="cam-status">LIVE</span>
+                </div>
+                <div class="cam-visualizer">
+                  <div class="console-simulation">
+                    <div class="knob"></div>
+                    <div class="knob"></div>
+                    <div class="knob"></div>
+                    <div class="fader"></div>
+                    <div class="fader"></div>
+                  </div>
+                  <div class="vu-meter">
+                    <div class="vu-bar"></div>
+                    <div class="vu-bar"></div>
+                    <div class="vu-bar"></div>
+                  </div>
+                </div>
+                <div class="grid-overlay"></div>
+              </div>
+
+              <!-- Cam 4: Broadcast Output / Program -->
+              <div class="cam-feed" id="feed-cam4">
+                <div class="cam-header">
+                  <span class="cam-name">CAM 04 - PROGRAM OUT</span>
+                  <span class="cam-status text-neon">REC</span>
+                </div>
+                <div class="cam-visualizer program-out">
+                  <div class="program-logo">AKMOV</div>
+                  <div class="timecode" id="liveTimecode">20:32:57:00</div>
+                  <div class="audio-spectrum-horizontal">
+                    <div class="spec-bar"></div>
+                    <div class="spec-bar"></div>
+                    <div class="spec-bar"></div>
+                    <div class="spec-bar"></div>
+                    <div class="spec-bar"></div>
+                    <div class="spec-bar"></div>
+                    <div class="spec-bar"></div>
+                    <div class="spec-bar"></div>
+                  </div>
+                </div>
+                <div class="grid-overlay"></div>
+              </div>
+
+            </div>
+
+            <!-- Interactivity & Screen Cover -->
+            <div class="player-cover" id="playerCover">
+              <svg class="cover-play-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+              <span>INICIAR TRANSMISIÓN EN VIVO</span>
+            </div>
+
+            <!-- Media Control Bar -->
+            <div class="player-controls">
+              <div class="controls-left">
+                <button class="control-btn" id="videoPlayPauseBtn" aria-label="Reproducir/Pausar">
+                  <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                  <svg class="icon-pause hidden" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                  </svg>
+                </button>
+                <div class="live-indicator">
+                  <span class="live-dot"></span>
+                  <span class="live-text">LIVE</span>
+                </div>
+              </div>
+              <div class="controls-right">
+                <!-- Volume Control -->
+                <div class="volume-control-group">
+                  <button class="control-btn" id="videoMuteBtn" aria-label="Silenciar">
+                    <svg class="icon-volume-high" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                    </svg>
+                    <svg class="icon-volume-mute hidden" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.21.05-.42.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+                    </svg>
+                  </button>
+                  <input type="range" class="volume-slider" id="videoVolumeSlider" min="0" max="1" step="0.1" value="0.8" aria-label="Volumen">
+                </div>
+                <!-- Settings Button -->
+                <button class="control-btn" id="videoSettingsBtn" aria-label="Configuración">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                  </svg>
+                </button>
+                <!-- Fullscreen Button -->
+                <button class="control-btn" id="videoFullscreenBtn" aria-label="Pantalla completa">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOCIAL MEDIA GRID -->
+    <section class="social-grid-section">
+      <div class="social-grid">
+        <!-- YouTube -->
+        <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="social-card card-youtube" aria-label="YouTube">
+          <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M23.498 6.163c-.272-1.016-1.07-1.813-2.085-2.085C19.578 3.53 12 3.53 12 3.53s-7.578 0-9.413.548c-1.016.272-1.813 1.07-2.085 2.085C0 8.002 0 12 0 12s0 3.998.502 5.837c.272 1.016 1.07 1.813 2.085 2.085 1.835.548 9.413.548 9.413.548s7.578 0 9.413-.548c1.016-.272 1.813-1.07 2.085-2.085C24 15.998 24 12 24 12s0-3.998-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+        </a>
+        <!-- X/Twitter -->
+        <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="social-card card-x" aria-label="X (Twitter)">
+          <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+        </a>
+        <!-- Twitch -->
+        <a href="https://twitch.tv" target="_blank" rel="noopener noreferrer" class="social-card card-twitch" aria-label="Twitch">
+          <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/>
+          </svg>
+        </a>
+        <!-- TikTok -->
+        <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" class="social-card card-tiktok" aria-label="TikTok">
+          <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12.525.02c1.31-.03 2.61-.01 3.91-.02.08 1.53.63 3.02 1.63 4.17 1.13 1.2 2.69 1.9 4.31 2.02v3.74c-1.84-.02-3.62-.64-5.07-1.75-.41-.3-.78-.65-1.11-1.04v7.71c.07 1.83-.5 3.67-1.63 5.09-1.37 1.77-3.64 2.76-5.87 2.53-2.11-.21-4.04-1.48-5.07-3.33-1.28-2.22-1.09-5.18.49-7.19 1.48-1.92 3.99-2.86 6.37-2.37v3.83c-1.07-.35-2.27-.1-3.13.62-.97.77-1.39 2.11-.97 3.3.43 1.26 1.76 2.08 3.08 1.94 1.21-.1 2.21-1.07 2.37-2.28.04-.37.03-.74.03-1.11V.02Z"/>
+          </svg>
+        </a>
+        <!-- Spotify -->
+        <a href="https://spotify.com" target="_blank" rel="noopener noreferrer" class="social-card card-spotify" aria-label="Spotify">
+          <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.02.24-2.82-1.74-6.36-2.10-10.56-1.14-.418.122-.779-.179-.899-.539-.12-.418.179-.779.539-.899 4.62-1.08 8.52-.66 11.7 1.32.36.24.42.66.24 1.02zm1.44-3.3c-.3.42-.84.6-1.26.3-3.24-1.98-8.16-2.58-12-1.38-.48.12-1.02-.12-1.14-.6-.12-.48.12-1.02.6-1.14 4.38-1.32 9.78-.6 13.5 1.68.42.24.6.78.3 1.26zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.3c-.6.18-1.14-.18-1.32-.72-.18-.54.18-1.14.72-1.32 4.2-1.26 11.28-1.02 15.72 1.62.54.3.72 1.02.42 1.56-.3.48-.96.72-1.5.42z"/>
+          </svg>
+        </a>
+        <!-- Instagram -->
+        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-card card-instagram" aria-label="Instagram">
+          <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+          </svg>
+        </a>
+        <!-- Facebook -->
+        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="social-card card-facebook" aria-label="Facebook">
+          <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+          </svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- PROGRAMACION & ON DEMAND GRID -->
+    <section id="programacion" class="content-section">
+      <h2 class="section-title">PROGRAMACIÓN HOY</h2>
+      <div class="schedule-container">
+        <div class="schedule-item current">
+          <div class="schedule-time">18:00 - 20:00</div>
+          <div class="schedule-details">
+            <span class="schedule-tag">EN VIVO</span>
+            <h3>AKMOV BEATS - ELECTRONIC SESSION</h3>
+            <p>Conduce: DJ Vektor</p>
+          </div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">20:00 - 22:00</div>
+          <div class="schedule-details">
+            <span class="schedule-tag next">Siguiente</span>
+            <h3>EL HUASCO ROCKS</h3>
+            <p>Especial de bandas locales y clásicos del rock.</p>
+          </div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">22:00 - 00:00</div>
+          <div class="schedule-details">
+            <h3>NIGHTWAVE RADAR</h3>
+            <p>Synthwave y sonidos nocturnos para finalizar el día.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="on-demand" class="content-section">
+      <h2 class="section-title">CONTENIDO ON DEMAND</h2>
+      <div class="ondemand-grid">
+        <div class="ondemand-card">
+          <div class="card-thumbnail">
+            <div class="thumbnail-overlay">
+              <svg viewBox="0 0 24 24" fill="currentColor" class="play-small-icon"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <div class="card-badge">PODCAST</div>
+          </div>
+          <div class="card-info">
+            <h3>Entrevista con Banda local "Los Cerros"</h3>
+            <p>Episodio 42 • Hace 2 días</p>
+          </div>
+        </div>
+        <div class="ondemand-card">
+          <div class="card-thumbnail">
+            <div class="thumbnail-overlay">
+              <svg viewBox="0 0 24 24" fill="currentColor" class="play-small-icon"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <div class="card-badge">VIDEO</div>
+          </div>
+          <div class="card-info">
+            <h3>AKMOV Live Session #12 - Huasco Acoustic</h3>
+            <p>Especial acústico de invierno • Hace 1 semana</p>
+          </div>
+        </div>
+        <div class="ondemand-card">
+          <div class="card-thumbnail">
+            <div class="thumbnail-overlay">
+              <svg viewBox="0 0 24 24" fill="currentColor" class="play-small-icon"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <div class="card-badge">REPORTE</div>
+          </div>
+          <div class="card-info">
+            <h3>Documental: El eco de la cordillera</h3>
+            <p>Producción original AKMOV • Hace 3 semanas</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="main-footer">
+    <div class="footer-container">
+      
+      <!-- Columna Izquierda: Isotipo y descripción -->
+      <div class="footer-col brand-col">
+        <div class="logo-wrapper" style="margin-bottom: 20px;">
+          <span class="logo-akmov">AKMOV</span>
+          <span class="logo-media">MEDIA</span>
+          <svg class="logo-star" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9Z" />
+          </svg>
+        </div>
+        <p class="brand-desc">
+          Pioneros en la difusión de música, contenidos digitales e identidad del Huasco. Transmitiendo cultura, sonido e innovación multimedia sin límites.
+        </p>
+        <span class="copyright">© 2026 AKMOV MEDIA. Todos los derechos reservados.</span>
+      </div>
+
+      <!-- Columna Central: Botón Listen -->
+      <div class="footer-col listen-col">
+        <button class="listen-giant-btn" id="footerListenBtn" aria-label="Escuchar en Vivo">
+          <div class="play-circle">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </div>
+          <span class="listen-text">LISTEN</span>
+        </button>
+        <p class="listen-sub">Escucha nuestra señal online directamente en alta definición desde cualquier dispositivo.</p>
+      </div>
+
+      <!-- Columna Derecha: Contacto -->
+      <div class="footer-col contact-col">
+        <h4 class="footer-title">CONTACTO</h4>
+        <ul class="contact-list">
+          <li>
+            <svg class="contact-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+            </svg>
+            <span>+56 9 8765 4321</span>
+          </li>
+          <li>
+            <svg class="contact-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+            </svg>
+            <span>soporte@akmovmedia.com</span>
+          </li>
+          <li>
+            <svg class="contact-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+            </svg>
+            <span>Av. Prat 450, Vallenar, Región de Atacama</span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- STICKY BOTTOM RADIO PLAYER -->
+  <section class="sticky-player-bar">
+    <div class="sticky-player-container">
+      
+      <!-- Extremo Izquierdo: Icono marca -->
+      <div class="sticky-brand">
+        <div class="brand-square">AK</div>
+      </div>
+
+      <!-- Botón Play Circular Verde -->
+      <button class="sticky-play-btn" id="audioPlayPauseBtn" aria-label="Reproducir señal de audio">
+        <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="icon-pause hidden" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+
+      <!-- Centro: Metadata del Stream -->
+      <div class="sticky-metadata">
+        <span class="meta-title">AKMOV MEDIA • Aire</span>
+        <div class="meta-ticker-wrap">
+          <span class="meta-ticker" id="audioTrackName">SEÑAL ONLINE - SINTONÍA DIGITAL STEREO (128 KBPS AAC)</span>
+        </div>
+      </div>
+
+      <!-- Extremo Derecho: Control de Volumen -->
+      <div class="sticky-volume">
+        <button class="sticky-volume-btn" id="audioMuteBtn" aria-label="Mute Audio">
+          <svg class="icon-volume-high" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+          </svg>
+          <svg class="icon-volume-mute hidden" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.21.05-.42.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3z"/>
+          </svg>
+        </button>
+        <div class="slider-container">
+          <input type="range" class="sticky-volume-slider" id="audioVolumeSlider" min="0" max="1" step="0.1" value="0.7" aria-label="Volumen de radio">
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Dummy HTML5 Audio Element for live stream simulation -->
+  <audio id="liveAudioStream" loop preload="none">
+    <source src="https://stream.zeno.fm/f37182a8t0hvv" type="audio/mpeg">
+    <!-- Fallback silent track in case the zeno stream fails or has CORS issues -->
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  </audio>
+
+  <script src="app.js"></script>
+</body>
+</html>
