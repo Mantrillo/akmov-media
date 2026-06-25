@@ -1444,3 +1444,85 @@ a {
   width: 100%;
 }
 
+/* REAL VIDEO PLAYER & HUD OVERLAY STYLES */
+.live-video-element {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background-color: var(--color-black);
+}
+
+.video-hud-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 40px); /* Exclude the controls bar height */
+  pointer-events: none;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.hud-top, .hud-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9);
+}
+
+.hud-logo {
+  font-weight: bold;
+  letter-spacing: 1px;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 2px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.hud-rec {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 2px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.hud-rec-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ff0000;
+}
+
+/* Flashing red dot when video is active/playing */
+.live-active .hud-rec-dot {
+  animation: rec-flash 1s infinite alternate;
+}
+
+@keyframes rec-flash {
+  from { opacity: 0.2; }
+  to { opacity: 1; }
+}
+
+.hud-timecode {
+  letter-spacing: 1px;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 2px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.hud-resolution {
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 2px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+

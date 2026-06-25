@@ -11,7 +11,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="index.css?v=2.1">
+  <!-- hls.js library for cross-browser live stream support -->
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <!-- Favicon using the brand's iconic 4-point star SVG -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300FF00'><path d='M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9Z'/></svg>">
 </head>
@@ -101,97 +103,20 @@
         <div class="monitor-wrapper">
           <div class="live-player" id="mainVideoPlayer">
             
-            <!-- Video Grid (4 Camera Split View) -->
-            <div class="video-grid">
-              
-              <!-- Cam 1: Main Host / Studio -->
-              <div class="cam-feed" id="feed-cam1">
-                <div class="cam-header">
-                  <span class="cam-name">CAM 01 - ESTUDIO PRINCIPAL</span>
-                  <span class="cam-status">LIVE</span>
-                </div>
-                <div class="cam-visualizer">
-                  <div class="studio-simulation">
-                    <div class="host-avatar"></div>
-                    <div class="mic-stand"></div>
-                  </div>
-                  <div class="wave-container">
-                    <span class="wave-bar"></span>
-                    <span class="wave-bar"></span>
-                    <span class="wave-bar"></span>
-                    <span class="wave-bar"></span>
-                    <span class="wave-bar"></span>
-                  </div>
-                </div>
-                <div class="grid-overlay"></div>
-              </div>
+            <!-- Real Live Video Element -->
+            <video id="liveVideo" class="live-video-element" playsinline></video>
 
-              <!-- Cam 2: DJ Booth / Audio Deck -->
-              <div class="cam-feed" id="feed-cam2">
-                <div class="cam-header">
-                  <span class="cam-name">CAM 02 - DJ BOOTH</span>
-                  <span class="cam-status">LIVE</span>
-                </div>
-                <div class="cam-visualizer">
-                  <div class="turntable-simulation">
-                    <div class="vinyl disc-1"></div>
-                    <div class="vinyl disc-2"></div>
-                  </div>
-                  <div class="wave-container">
-                    <span class="wave-bar"></span>
-                    <span class="wave-bar"></span>
-                    <span class="wave-bar"></span>
-                  </div>
-                </div>
-                <div class="grid-overlay"></div>
+            <!-- Video HUD / Overlay to keep the TV control room design -->
+            <div class="video-hud-overlay">
+              <div class="hud-top">
+                <span class="hud-logo">AKMOV LIVE</span>
+                <span class="hud-rec"><span class="hud-rec-dot"></span>REC</span>
               </div>
-
-              <!-- Cam 3: Control Room / Console -->
-              <div class="cam-feed" id="feed-cam3">
-                <div class="cam-header">
-                  <span class="cam-name">CAM 03 - CONTROL DE MANDO</span>
-                  <span class="cam-status">LIVE</span>
-                </div>
-                <div class="cam-visualizer">
-                  <div class="console-simulation">
-                    <div class="knob"></div>
-                    <div class="knob"></div>
-                    <div class="knob"></div>
-                    <div class="fader"></div>
-                    <div class="fader"></div>
-                  </div>
-                  <div class="vu-meter">
-                    <div class="vu-bar"></div>
-                    <div class="vu-bar"></div>
-                    <div class="vu-bar"></div>
-                  </div>
-                </div>
-                <div class="grid-overlay"></div>
+              <div class="hud-bottom">
+                <span class="hud-timecode" id="liveTimecode">00:00:00:00</span>
+                <span class="hud-resolution">1080p @ 30fps</span>
               </div>
-
-              <!-- Cam 4: Broadcast Output / Program -->
-              <div class="cam-feed" id="feed-cam4">
-                <div class="cam-header">
-                  <span class="cam-name">CAM 04 - PROGRAM OUT</span>
-                  <span class="cam-status text-neon">REC</span>
-                </div>
-                <div class="cam-visualizer program-out">
-                  <div class="program-logo">AKMOV</div>
-                  <div class="timecode" id="liveTimecode">20:32:57:00</div>
-                  <div class="audio-spectrum-horizontal">
-                    <div class="spec-bar"></div>
-                    <div class="spec-bar"></div>
-                    <div class="spec-bar"></div>
-                    <div class="spec-bar"></div>
-                    <div class="spec-bar"></div>
-                    <div class="spec-bar"></div>
-                    <div class="spec-bar"></div>
-                    <div class="spec-bar"></div>
-                  </div>
-                </div>
-                <div class="grid-overlay"></div>
-              </div>
-
+              <div class="grid-overlay"></div>
             </div>
 
             <!-- Interactivity & Screen Cover -->
@@ -486,7 +411,7 @@
 
   </div> <!-- Close #mainPortal -->
 
-  <script src="app.js"></script>
+  <script src="app.js?v=2.1"></script>
 </body>
 </html>
 

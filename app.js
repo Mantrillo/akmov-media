@@ -62,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 1. LIVE VIDEO PLAYER CONTROL SIMULATION
   // ==========================================
   const mainVideoPlayer = document.getElementById('mainVideoPlayer');
+  const liveVideo = document.getElementById('liveVideo');
   const playerCover = document.getElementById('playerCover');
   const videoPlayPauseBtn = document.getElementById('videoPlayPauseBtn');
   const videoMuteBtn = document.getElementById('videoMuteBtn');
@@ -74,22 +75,87 @@ document.addEventListener('DOMContentLoaded', () => {
   const iconVolumeHighVideo = videoMuteBtn.querySelector('.icon-volume-high');
   const iconVolumeMuteVideo = videoMuteBtn.querySelector('.icon-volume-mute');
 
+  const STREAM_URL = "https://stream.akmovmedia.com/hls/stream.m3u8";
+  let hlsInstance = null;
   let isVideoPlaying = false;
   let isVideoMuted = false;
   let videoVolumeBeforeMute = 0.8;
+
+  // Initialize HLS stream on play
+  function initVideoStream() {
+    if (hlsInstance) return; // Already initialized
+
+    if (Hls.isSupported()) {
+      hlsInstance = new Hls({
+        maxMaxBufferLength: 10,
+        liveSyncDuration: 3,
+        enableWorker: true
+      });
+      hlsInstance.loadSource(STREAM_URL);
+      hlsInstance.attachMedia(liveVideo);
+      hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
+        liveVideo.play().catch(err => console.warn("Auto-play blocked or stream offline", err));
+      });
+      hlsInstance.on(Hls.Events.ERROR, (event, data) => {
+        if (data.fatal) {
+          switch (data.type) {
+            case Hls.ErrorTypes.NETWORK_ERROR:
+              console.error("HLS Network Error, trying to recover...");
+              hlsInstance.startLoad();
+              break;
+            case Hls.ErrorTypes.MEDIA_ERROR:
+              console.error("HLS Media Error, trying to recover...");
+              hlsInstance.recoverMediaError();
+              break;
+            default:
+              console.error("Fatal HLS Error, destroying instance");
+              destroyVideoStream();
+              break;
+          }
+        }
+      });
+    } else if (liveVideo.canPlayType('application/vnd.apple.mpegurl')) {
+      // Native iOS HLS support
+      liveVideo.src = STREAM_URL;
+      liveVideo.addEventListener('loadedmetadata', () => {
+        liveVideo.play().catch(err => console.warn("Native auto-play blocked", err));
+      });
+    }
+  }
+
+  function destroyVideoStream() {
+    if (hlsInstance) {
+      hlsInstance.destroy();
+      hlsInstance = null;
+    }
+    if (liveVideo) {
+      liveVideo.src = "";
+      liveVideo.load();
+    }
+  }
 
   // Toggle Video Play/Pause State
   function toggleVideoPlayback() {
     isVideoPlaying = !isVideoPlaying;
     
     if (isVideoPlaying) {
+      initVideoStream();
+      liveVideo.volume = parseFloat(videoVolumeSlider.value);
+      liveVideo.muted = isVideoMuted;
+      
       mainVideoPlayer.classList.add('live-active');
       playerCover.style.opacity = '0';
       setTimeout(() => playerCover.classList.add('hidden'), 300);
       
       iconPlayVideo.classList.add('hidden');
       iconPauseVideo.classList.remove('hidden');
+      
+      // Auto-play the video
+      if (liveVideo.paused) {
+        liveVideo.play().catch(err => console.warn("Play triggered before stream initialized", err));
+      }
     } else {
+      liveVideo.pause();
       mainVideoPlayer.classList.remove('live-active');
       playerCover.classList.remove('hidden');
       setTimeout(() => playerCover.style.opacity = '1', 50);
@@ -105,6 +171,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Mute / Unmute Video Audio
   videoMuteBtn.addEventListener('click', () => {
     isVideoMuted = !isVideoMuted;
+    liveVideo.muted = isVideoMuted;
+    
     if (isVideoMuted) {
       videoVolumeBeforeMute = parseFloat(videoVolumeSlider.value);
       videoVolumeSlider.value = 0;
@@ -112,6 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
       iconVolumeMuteVideo.classList.remove('hidden');
     } else {
       videoVolumeSlider.value = videoVolumeBeforeMute;
+      liveVideo.volume = videoVolumeBeforeMute;
       iconVolumeHighVideo.classList.remove('hidden');
       iconVolumeMuteVideo.classList.add('hidden');
     }
@@ -120,12 +189,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // Volume slider input
   videoVolumeSlider.addEventListener('input', (e) => {
     const val = parseFloat(e.target.value);
+    liveVideo.volume = val;
+    
     if (val === 0) {
       isVideoMuted = true;
+      liveVideo.muted = true;
       iconVolumeHighVideo.classList.add('hidden');
       iconVolumeMuteVideo.classList.remove('hidden');
     } else {
       isVideoMuted = false;
+      liveVideo.muted = false;
       iconVolumeHighVideo.classList.remove('hidden');
       iconVolumeMuteVideo.classList.add('hidden');
     }
