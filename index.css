@@ -1213,3 +1213,202 @@ a {
     display: none; /* Hide volume slider on mobile for cleaner look */
   }
 }
+
+/* MAINTENANCE SCREEN STYLES */
+.maintenance-view {
+  width: 100vw;
+  min-height: 100vh;
+  background-color: var(--color-black);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  overflow-y: auto;
+}
+
+.maintenance-container {
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.maintenance-logo {
+  max-width: 280px;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.1));
+}
+
+.maintenance-title {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  letter-spacing: 2px;
+  color: var(--color-white);
+  border-bottom: 3px solid var(--color-neon);
+  padding-bottom: 10px;
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+}
+
+.maintenance-subtitle {
+  font-size: 1rem;
+  color: var(--color-gray-text);
+  line-height: 1.6;
+}
+
+.social-grid-mini {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.social-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--color-white);
+  transition: all var(--transition-fast);
+}
+
+.social-circle svg {
+  width: 22px;
+  height: 22px;
+}
+
+.social-circle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.circle-youtube { background-color: #ff0000; }
+.circle-x { background-color: #121212; border: 1px solid var(--color-gray-border); }
+.circle-twitch { background-color: #9146ff; }
+.circle-tiktok { background-color: #ff0050; }
+.circle-spotify { background-color: #1ed760; }
+.circle-instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%); }
+.circle-facebook { background-color: #1877f2; }
+
+/* LOGIN SCREEN STYLES */
+.login-view {
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--color-black);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+}
+
+.login-container {
+  max-width: 400px;
+  width: 100%;
+  padding: 40px;
+  background-color: var(--color-gray-dark);
+  border: 2px solid var(--color-white);
+  box-shadow: -10px 10px 0 var(--color-neon);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+}
+
+.login-logo {
+  max-width: 180px;
+  height: auto;
+}
+
+.login-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+}
+
+.login-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+}
+
+.input-label {
+  font-size: 0.75rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: var(--color-gray-text);
+}
+
+.brutalist-input {
+  width: 100%;
+  padding: 12px 15px;
+  background-color: var(--color-black);
+  border: 2px solid var(--color-gray-border);
+  color: var(--color-white);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  border-radius: 0;
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+.brutalist-input:focus {
+  border-color: var(--color-neon);
+  box-shadow: 0 0 10px var(--color-neon-dim);
+}
+
+.brutalist-submit-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--color-white);
+  color: var(--color-black);
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.brutalist-submit-btn:hover {
+  background-color: var(--color-neon);
+  box-shadow: 0 0 15px var(--color-neon);
+  transform: translateY(-2px);
+}
+
+.login-error-msg {
+  color: #ff0000;
+  font-size: 0.8rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-top: 5px;
+}
+
+/* PORTAL VIEW CONTAINER */
+.portal-view {
+  width: 100%;
+}
+

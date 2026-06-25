@@ -1,6 +1,64 @@
 document.addEventListener('DOMContentLoaded', () => {
   
   // ==========================================
+  // 0. MAINTENANCE AND ROUTING SYSTEM
+  // ==========================================
+  const maintenanceScreen = document.getElementById('maintenanceScreen');
+  const loginScreen = document.getElementById('loginScreen');
+  const mainPortal = document.getElementById('mainPortal');
+  const loginForm = document.getElementById('loginForm');
+  const adminPassword = document.getElementById('adminPassword');
+  const loginError = document.getElementById('loginError');
+
+  // Secret access password
+  const ACCESS_PASSWORD = "akmov2026";
+
+  function checkRouting() {
+    const isAuthenticated = localStorage.getItem('akmov_authenticated') === 'true';
+    const isSecretRoute = window.location.hash === '#administreichon';
+
+    if (isAuthenticated) {
+      if (maintenanceScreen) maintenanceScreen.classList.add('hidden');
+      if (loginScreen) loginScreen.classList.add('hidden');
+      if (mainPortal) mainPortal.classList.remove('hidden');
+    } else {
+      if (mainPortal) mainPortal.classList.add('hidden');
+      if (isSecretRoute) {
+        if (maintenanceScreen) maintenanceScreen.classList.add('hidden');
+        if (loginScreen) loginScreen.classList.remove('hidden');
+        if (adminPassword) adminPassword.focus();
+      } else {
+        if (maintenanceScreen) maintenanceScreen.classList.remove('hidden');
+        if (loginScreen) loginScreen.classList.add('hidden');
+      }
+    }
+  }
+
+  // Initial Check
+  checkRouting();
+  window.addEventListener('hashchange', checkRouting);
+
+  // Form Submit
+  if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (adminPassword && adminPassword.value === ACCESS_PASSWORD) {
+        localStorage.setItem('akmov_authenticated', 'true');
+        if (loginError) loginError.classList.add('hidden');
+        adminPassword.value = '';
+        window.location.hash = ''; // Clear hash to show homepage
+        checkRouting();
+      } else {
+        if (loginError) loginError.classList.remove('hidden');
+        if (adminPassword) {
+          adminPassword.value = '';
+          adminPassword.focus();
+        }
+      }
+    });
+  }
+
+  // ==========================================
   // 1. LIVE VIDEO PLAYER CONTROL SIMULATION
   // ==========================================
   const mainVideoPlayer = document.getElementById('mainVideoPlayer');
