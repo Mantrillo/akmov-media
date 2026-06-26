@@ -101,76 +101,121 @@
       <div class="player-container">
         <!-- Neon Green Border Wrapper -->
         <div class="monitor-wrapper">
-          <div class="live-player" id="mainVideoPlayer">
-            
-            <!-- Real Live Video Element -->
-            <video id="liveVideo" class="live-video-element" playsinline></video>
+          <div class="live-player-layout">
+            <div class="live-player" id="mainVideoPlayer">
+              
+              <!-- Real Live Video Element -->
+              <video id="liveVideo" class="live-video-element" playsinline></video>
 
-            <!-- Video HUD / Overlay to keep the TV control room design -->
-            <div class="video-hud-overlay">
-              <div class="hud-top">
-                <span class="hud-logo">AKMOV LIVE</span>
-                <span class="hud-rec"><span class="hud-rec-dot"></span>REC</span>
-              </div>
-              <div class="hud-bottom">
-                <span class="hud-timecode" id="liveTimecode">00:00:00:00</span>
-                <span class="hud-resolution">1080p @ 30fps</span>
-              </div>
-              <div class="grid-overlay"></div>
-            </div>
 
-            <!-- Interactivity & Screen Cover -->
-            <div class="player-cover" id="playerCover">
-              <svg class="cover-play-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M8 5v14l11-7z"/>
-              </svg>
-              <span>INICIAR TRANSMISIÓN EN VIVO</span>
-            </div>
 
-            <!-- Media Control Bar -->
-            <div class="player-controls">
-              <div class="controls-left">
-                <button class="control-btn" id="videoPlayPauseBtn" aria-label="Reproducir/Pausar">
-                  <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M8 5v14l11-7z"/>
-                  </svg>
-                  <svg class="icon-pause hidden" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-                  </svg>
-                </button>
-                <div class="live-indicator">
-                  <span class="live-dot"></span>
-                  <span class="live-text">LIVE</span>
-                </div>
-              </div>
-              <div class="controls-right">
-                <!-- Volume Control -->
-                <div class="volume-control-group">
-                  <button class="control-btn" id="videoMuteBtn" aria-label="Silenciar">
-                    <svg class="icon-volume-high" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+              <!-- Media Control Bar -->
+              <div class="player-controls">
+                <div class="controls-left">
+                  <button class="control-btn" id="videoPlayPauseBtn" aria-label="Reproducir/Pausar">
+                    <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M8 5v14l11-7z"/>
                     </svg>
-                    <svg class="icon-volume-mute hidden" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.21.05-.42.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+                    <svg class="icon-pause hidden" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
                     </svg>
                   </button>
-                  <input type="range" class="volume-slider" id="videoVolumeSlider" min="0" max="1" step="0.1" value="0.8" aria-label="Volumen">
+                  <div class="live-indicator">
+                    <span class="live-dot"></span>
+                    <span class="live-text">LIVE</span>
+                  </div>
                 </div>
-                <!-- Settings Button -->
-                <button class="control-btn" id="videoSettingsBtn" aria-label="Configuración">
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
-                  </svg>
-                </button>
-                <!-- Fullscreen Button -->
-                <button class="control-btn" id="videoFullscreenBtn" aria-label="Pantalla completa">
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
-                  </svg>
-                </button>
+                <div class="controls-right">
+                  <!-- Volume Control -->
+                  <div class="volume-control-group">
+                    <button class="control-btn" id="videoMuteBtn" aria-label="Silenciar">
+                      <svg class="icon-volume-high" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                      </svg>
+                      <svg class="icon-volume-mute hidden" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.21.05-.42.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+                      </svg>
+                    </button>
+                    <input type="range" class="volume-slider" id="videoVolumeSlider" min="0" max="1" step="0.1" value="0.3" aria-label="Volumen">
+                  </div>
+                  <!-- Settings Button -->
+                  <button class="control-btn" id="videoSettingsBtn" aria-label="Configuración">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                    </svg>
+                  </button>
+                  <!-- Fullscreen Button -->
+                  <button class="control-btn" id="videoFullscreenBtn" aria-label="Pantalla completa">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                    </svg>
+                  </button>
+                </div>
               </div>
+
             </div>
 
+            <!-- CHAT SIDEBAR -->
+            <div class="live-chat-sidebar">
+              <div class="chat-header">
+                <span class="chat-title">CHAT EN VIVO</span>
+                <span class="chat-status-indicator" id="chatStatus">● CONECTANDO</span>
+              </div>
+              
+              <!-- Pinned Messages Banner -->
+              <div id="chatPinnedArea" class="chat-pinned-area hidden">
+                <span class="pinned-badge">Fijado</span>
+                <div id="pinnedContent" class="pinned-content"></div>
+                <button id="pinnedUnpinBtn" class="pinned-unpin-btn" title="Desfijar mensaje">×</button>
+              </div>
+
+              <!-- Message Logs -->
+              <div class="chat-messages" id="chatMessages">
+                <div class="chat-msg system"><span class="msg-text">Bienvenido al chat de AKMOV MEDIA. Para participar, por favor escribe tu apodo.</span></div>
+              </div>
+              
+              <div class="chat-input-area">
+                <!-- Custom Emoji Admin panel (only shown to authenticated administrators) -->
+                <div id="adminEmojiManager" class="admin-emoji-manager hidden">
+                  <div class="admin-emoji-manager-title">Emojis Personalizados (Admin)</div>
+                  <div class="admin-emoji-row">
+                    <input type="text" id="adminEmojiName" placeholder=":corto: (ej. :akmov:)" maxLength="15">
+                    <input type="text" id="adminEmojiUrl" placeholder="URL de imagen (PNG/SVG/GIF)">
+                    <button id="adminEmojiAddBtn">Subir</button>
+                  </div>
+                </div>
+
+                <!-- Custom Emoji & Emoji picker popover -->
+                <div id="emojiPopover" class="emoji-popover hidden">
+                  <!-- Will be populated dynamically by JS with standard & custom emojis -->
+                </div>
+
+                <!-- Configuración de apodo -->
+                <div id="chatNickArea" class="chat-nick-config">
+                  <input type="text" id="chatNickInput" placeholder="Elige tu apodo..." maxLength="15">
+                  <button id="chatNickBtn">OK</button>
+                </div>
+                <!-- Envío de mensaje (oculto hasta elegir apodo) -->
+                <div id="chatMsgArea" class="chat-msg-config hidden">
+                  <div class="chat-input-row">
+                    <input type="text" id="chatInput" placeholder="Escribe un mensaje..." maxLength="100">
+                    <button id="chatSendBtn" aria-label="Enviar">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                    </button>
+                  </div>
+                  <!-- Chat Toolbar -->
+                  <div class="chat-toolbar">
+                    <div class="toolbar-left">
+                      <button id="chatEmojiBtn" class="toolbar-btn" title="Insertar Emoji">😊 Emojis</button>
+                      <button id="chatAdminEmojisBtn" class="toolbar-btn hidden" title="Administrar Emojis">⚙️ Custom</button>
+                    </div>
+                    <div class="user-nick-display" id="userNickDisplay" title="Cambiar apodo">
+                      Apodo: <span id="userNickSpan">Invitado</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
