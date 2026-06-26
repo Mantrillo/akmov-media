@@ -155,66 +155,9 @@
 
             </div>
 
-            <!-- CHAT SIDEBAR -->
+            <!-- CHAT SIDEBAR (Embedded Owncast Chat) -->
             <div class="live-chat-sidebar">
-              <div class="chat-header">
-                <span class="chat-title">CHAT EN VIVO</span>
-                <span class="chat-status-indicator" id="chatStatus">● CONECTANDO</span>
-              </div>
-              
-              <!-- Pinned Messages Banner -->
-              <div id="chatPinnedArea" class="chat-pinned-area hidden">
-                <span class="pinned-badge">Fijado</span>
-                <div id="pinnedContent" class="pinned-content"></div>
-                <button id="pinnedUnpinBtn" class="pinned-unpin-btn" title="Desfijar mensaje">×</button>
-              </div>
-
-              <!-- Message Logs -->
-              <div class="chat-messages" id="chatMessages">
-                <div class="chat-msg system"><span class="msg-text">Bienvenido al chat de AKMOV MEDIA. Para participar, por favor escribe tu apodo.</span></div>
-              </div>
-              
-              <div class="chat-input-area">
-                <!-- Custom Emoji Admin panel (only shown to authenticated administrators) -->
-                <div id="adminEmojiManager" class="admin-emoji-manager hidden">
-                  <div class="admin-emoji-manager-title">Emojis Personalizados (Admin)</div>
-                  <div class="admin-emoji-row">
-                    <input type="text" id="adminEmojiName" placeholder=":corto: (ej. :akmov:)" maxLength="15">
-                    <input type="text" id="adminEmojiUrl" placeholder="URL de imagen (PNG/SVG/GIF)">
-                    <button id="adminEmojiAddBtn">Subir</button>
-                  </div>
-                </div>
-
-                <!-- Custom Emoji & Emoji picker popover -->
-                <div id="emojiPopover" class="emoji-popover hidden">
-                  <!-- Will be populated dynamically by JS with standard & custom emojis -->
-                </div>
-
-                <!-- Configuración de apodo -->
-                <div id="chatNickArea" class="chat-nick-config">
-                  <input type="text" id="chatNickInput" placeholder="Elige tu apodo..." maxLength="15">
-                  <button id="chatNickBtn">OK</button>
-                </div>
-                <!-- Envío de mensaje (oculto hasta elegir apodo) -->
-                <div id="chatMsgArea" class="chat-msg-config hidden">
-                  <div class="chat-input-row">
-                    <input type="text" id="chatInput" placeholder="Escribe un mensaje..." maxLength="100">
-                    <button id="chatSendBtn" aria-label="Enviar">
-                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-                    </button>
-                  </div>
-                  <!-- Chat Toolbar -->
-                  <div class="chat-toolbar">
-                    <div class="toolbar-left">
-                      <button id="chatEmojiBtn" class="toolbar-btn" title="Insertar Emoji">😊 Emojis</button>
-                      <button id="chatAdminEmojisBtn" class="toolbar-btn hidden" title="Administrar Emojis">⚙️ Custom</button>
-                    </div>
-                    <div class="user-nick-display" id="userNickDisplay" title="Cambiar apodo">
-                      Apodo: <span id="userNickSpan">Invitado</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <iframe src="https://stream.akmovmedia.com/embed/chat/readwrite" width="100%" height="100%" style="border:none; min-height: 100%;" allow="clipboard-read; clipboard-write"></iframe>
             </div>
           </div>
         </div>
