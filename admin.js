@@ -22,6 +22,15 @@ const CONFIG = {
 // Se guarda en localStorage para persistir entre sesiones
 let scheduleData = [];
 
+const DEFAULT_SCHEDULE = [
+  { start: '06:00', end: '09:00', title: 'AKMOV MAÑANA', desc: 'Información y música para empezar el día.', type: 'autodj' },
+  { start: '10:00', end: '12:00', title: 'EL HUASCO DESPIERTA', desc: 'Noticias locales y entrevistas.', type: 'live' },
+  { start: '14:00', end: '16:00', title: 'TARDE EN EL HUASCO', desc: 'Música variada y clásicos.', type: 'autodj' },
+  { start: '18:00', end: '20:00', title: 'AKMOV BEATS SESSION', desc: 'Conduce: DJ Vektor', type: 'live' },
+  { start: '20:00', end: '22:00', title: 'EL HUASCO ROCKS', desc: 'Especial de bandas locales y rock.', type: 'next' },
+  { start: '22:00', end: '00:00', title: 'NIGHTWAVE RADAR', desc: 'Synthwave y sonidos nocturnos.', type: 'autodj' },
+];
+
 // ─── CAPTCHA STATE ────────────────────────────────────────────
 let captchaAnswer = 0;
 
@@ -273,14 +282,7 @@ document.addEventListener('click', (e) => {
 });
 
 // ─── SCHEDULE EDITOR ─────────────────────────────────────────
-const DEFAULT_SCHEDULE = [
-  { start: '06:00', end: '09:00', title: 'AKMOV MAÑANA', desc: 'Información y música para empezar el día.', type: 'autodj' },
-  { start: '10:00', end: '12:00', title: 'EL HUASCO DESPIERTA', desc: 'Noticias locales y entrevistas.', type: 'live' },
-  { start: '14:00', end: '16:00', title: 'TARDE EN EL HUASCO', desc: 'Música variada y clásicos.', type: 'autodj' },
-  { start: '18:00', end: '20:00', title: 'AKMOV BEATS SESSION', desc: 'Conduce: DJ Vektor', type: 'live' },
-  { start: '20:00', end: '22:00', title: 'EL HUASCO ROCKS', desc: 'Especial de bandas locales y rock.', type: 'next' },
-  { start: '22:00', end: '00:00', title: 'NIGHTWAVE RADAR', desc: 'Synthwave y sonidos nocturnos.', type: 'autodj' },
-];
+// DEFAULT_SCHEDULE movido al inicio del archivo
 
 function loadSchedule() {
   const saved = localStorage.getItem('akmov_schedule');
