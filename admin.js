@@ -31,6 +31,10 @@ const DEFAULT_SCHEDULE = [
   { start: '22:00', end: '00:00', title: 'NIGHTWAVE RADAR', desc: 'Synthwave y sonidos nocturnos.', type: 'autodj' },
 ];
 
+// ─── ESTADO RUNTIME ─────────────────────────────────────────────────────
+let pollTimer   = null;
+let keyRevealed = false;
+
 // ─── CAPTCHA STATE ────────────────────────────────────────────
 let captchaAnswer = 0;
 
@@ -240,7 +244,6 @@ btnStart.addEventListener('click', async () => {
 });
 
 // ─── POLLING ─────────────────────────────────────────────────
-let pollTimer = null;
 
 function startPolling() {
   fetchAutodjStatus();
@@ -252,7 +255,6 @@ function stopPolling() {
 }
 
 // ─── STREAM KEY REVEAL ────────────────────────────────────────
-let keyRevealed = false;
 
 revealKeyBtn.addEventListener('click', () => {
   keyRevealed = !keyRevealed;
