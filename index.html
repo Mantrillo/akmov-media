@@ -212,31 +212,13 @@
       </div>
     </section>
 
-    <!-- PROGRAMACION & ON DEMAND GRID -->
     <section id="programacion" class="content-section">
       <h2 class="section-title">PROGRAMACIÓN HOY</h2>
-      <div class="schedule-container">
-        <div class="schedule-item current">
-          <div class="schedule-time">18:00 - 20:00</div>
+      <div class="schedule-container" id="publicScheduleContainer">
+        <div class="schedule-item" id="scheduleLoadingPlaceholder">
+          <div class="schedule-time">...</div>
           <div class="schedule-details">
-            <span class="schedule-tag">EN VIVO</span>
-            <h3>AKMOV BEATS - ELECTRONIC SESSION</h3>
-            <p>Conduce: DJ Vektor</p>
-          </div>
-        </div>
-        <div class="schedule-item">
-          <div class="schedule-time">20:00 - 22:00</div>
-          <div class="schedule-details">
-            <span class="schedule-tag next">Siguiente</span>
-            <h3>EL HUASCO ROCKS</h3>
-            <p>Especial de bandas locales y clásicos del rock.</p>
-          </div>
-        </div>
-        <div class="schedule-item">
-          <div class="schedule-time">22:00 - 00:00</div>
-          <div class="schedule-details">
-            <h3>NIGHTWAVE RADAR</h3>
-            <p>Synthwave y sonidos nocturnos para finalizar el día.</p>
+            <h3>Cargando programación...</h3>
           </div>
         </div>
       </div>
@@ -399,7 +381,8 @@
 
   </div> <!-- Close #mainPortal -->
 
-  <script src="app.js?v=2.1"></script>
+  <script src="config.js"></script>
+  <script src="app.js?v=2.2"></script>
 </body>
 </html>
 
