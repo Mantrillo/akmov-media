@@ -14,7 +14,7 @@ const CONFIG = {
   STREAM_KEY:     'abc123',       // Clave de stream de Owncast — CAMBIAR si la modificaste en Owncast
   // URL base de la API del servidor. El servidor Node.js (admin-api.js)
   // debe estar corriendo en el puerto 3001 del servidor Ubuntu.
-  API_BASE: 'https://lens-mutual-plymouth-via.trycloudflare.com',
+  API_BASE: 'https://constitute-restored-default-isle.trycloudflare.com',
   POLL_INTERVAL: 8000,           // ms entre cada chequeo de estado del AutoDJ
 };
 
