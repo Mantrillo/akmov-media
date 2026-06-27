@@ -393,6 +393,68 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
+// ==========================================
+// 4. PROGRAMACIÓN DINÁMICA DESDE LA API
+// ==========================================
+(async function loadPublicSchedule() {
+  const container = document.getElementById('publicScheduleContainer');
+  if (!container) return;
+
+  const typeLabels = {
+    live:    '<span class="schedule-tag">EN VIVO</span>',
+    next:    '<span class="schedule-tag next">Siguiente</span>',
+    autodj:  '<span class="schedule-tag autodj">AutoDJ</span>',
+    repeat:  '<span class="schedule-tag">Repetición</span>',
+  };
+
+  function isCurrentSlot(start, end) {
+    const now  = new Date();
+    const cur  = now.getHours() * 60 + now.getMinutes();
+    const [sh, sm] = start.split(':').map(Number);
+    const [eh, em] = end.split(':').map(Number);
+    const s = sh * 60 + sm;
+    const e = eh * 60 + em;
+    // Handle midnight wrap (e.g. 22:00 → 00:00)
+    if (e < s) return cur >= s || cur < e;
+    return cur >= s && cur < e;
+  }
+
+  function renderPublicSchedule(slots) {
+    const sorted = [...slots].sort((a, b) => a.start.localeCompare(b.start));
+    container.innerHTML = sorted.map(slot => {
+      const isCurrent = isCurrentSlot(slot.start, slot.end);
+      return `
+        <div class="schedule-item${isCurrent ? ' current' : ''}">
+          <div class="schedule-time">${slot.start} - ${slot.end}</div>
+          <div class="schedule-details">
+            ${typeLabels[slot.type] || ''}
+            <h3>${slot.title}</h3>
+            ${slot.desc ? `<p>${slot.desc}</p>` : ''}
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  try {
+    const res  = await fetch(AKMOV_API_BASE + '/schedule');
+    const data = await res.json();
+    if (data && Array.isArray(data.schedule) && data.schedule.length > 0) {
+      renderPublicSchedule(data.schedule);
+      return;
+    }
+  } catch { /* API no disponible */ }
+
+  // Fallback: programación por defecto
+  const defaultSlots = [
+    { start: '06:00', end: '09:00', title: 'AKMOV MAÑANA', desc: 'Información y música para empezar el día.', type: 'autodj' },
+    { start: '10:00', end: '12:00', title: 'EL HUASCO DESPIERTA', desc: 'Noticias locales y entrevistas.', type: 'live' },
+    { start: '14:00', end: '16:00', title: 'TARDE EN EL HUASCO', desc: 'Música variada y clásicos.', type: 'autodj' },
+    { start: '18:00', end: '20:00', title: 'AKMOV BEATS SESSION', desc: 'Conduce: DJ Vektor', type: 'live' },
+    { start: '20:00', end: '22:00', title: 'EL HUASCO ROCKS', desc: 'Especial de bandas locales y rock.', type: 'next' },
+    { start: '22:00', end: '00:00', title: 'NIGHTWAVE RADAR', desc: 'Synthwave y sonidos nocturnos.', type: 'autodj' },
+  ];
+  renderPublicSchedule(defaultSlots);
+})();
   // ==========================================
   // 3. NAVIGATION INTERACTION (Smooth Scroll & Active Link)
   // ==========================================

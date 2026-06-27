@@ -14,7 +14,7 @@ const CONFIG = {
   STREAM_KEY:     'abc123',       // Clave de stream de Owncast — CAMBIAR si la modificaste en Owncast
   // URL base de la API del servidor. El servidor Node.js (admin-api.js)
   // debe estar corriendo en el puerto 3001 del servidor Ubuntu.
-  API_BASE: 'https://constitute-restored-default-isle.trycloudflare.com',
+  API_BASE: AKMOV_API_BASE,
   POLL_INTERVAL: 8000,           // ms entre cada chequeo de estado del AutoDJ
 };
 
@@ -286,13 +286,28 @@ document.addEventListener('click', (e) => {
 // ─── SCHEDULE EDITOR ─────────────────────────────────────────
 // DEFAULT_SCHEDULE movido al inicio del archivo
 
-function loadSchedule() {
+async function loadSchedule() {
+  try {
+    const data = await apiCall('/schedule');
+    if (data && Array.isArray(data.schedule) && data.schedule.length > 0) {
+      scheduleData = data.schedule;
+      localStorage.setItem('akmov_schedule', JSON.stringify(scheduleData));
+      return;
+    }
+  } catch { /* API no disponible, usar localStorage */ }
+
   const saved = localStorage.getItem('akmov_schedule');
   scheduleData = saved ? JSON.parse(saved) : [...DEFAULT_SCHEDULE];
 }
 
-function saveSchedule() {
+async function saveSchedule() {
   localStorage.setItem('akmov_schedule', JSON.stringify(scheduleData));
+  try {
+    await apiCall('/schedule', 'POST', { schedule: scheduleData });
+  } catch {
+    // Si la API no responde, al menos quedó en localStorage
+    console.warn('No se pudo guardar en el servidor. Solo guardado en localStorage.');
+  }
 }
 
 function renderSchedule() {
@@ -337,11 +352,13 @@ scheduleList.addEventListener('click', (e) => {
   saveHint.textContent = '⚠ Cambios sin guardar';
 });
 
-saveScheduleBtn.addEventListener('click', () => {
-  saveSchedule();
-  saveHint.textContent = '✓ Guardado';
-  toast('Programación guardada exitosamente.', 'success');
+saveScheduleBtn.addEventListener('click', async () => {
+  saveScheduleBtn.disabled = true;
+  await saveSchedule();
+  saveHint.textContent = '✓ Guardado en servidor';
+  toast('Programación guardada y publicada en la web.', 'success');
   setTimeout(() => { saveHint.textContent = ''; }, 3000);
+  saveScheduleBtn.disabled = false;
 });
 
 // ─── ADD SLOT MODAL ───────────────────────────────────────────

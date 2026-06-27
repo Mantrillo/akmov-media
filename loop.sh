@@ -8,10 +8,10 @@
 # ==============================================================================
 
 # CONFIGURACIÓN
-VIDEO_DIR="$HOME/videos"                    # Carpeta donde subirás tus videos (.mp4)
+VIDEO_DIR="/mnt/videos"                    # Carpeta donde subirás tus videos (.mp4)
 PLAYLIST_FILE="/tmp/owncast_playlist.txt"   # Archivo temporal de lista de reproducción
-OWNCAST_RTMP_URL="rtmp://localhost/live"   # Dirección RTMP de tu Owncast
-STREAM_KEY="TU_STREAM_KEY_AQUI"             # Reemplaza por tu Stream Key de Owncast
+OWNCAST_RTMP_URL="rtmp://localhost:1935/live"   # Dirección RTMP de tu Owncast
+STREAM_KEY="abc123"                         # Reemplaza por tu Stream Key de Owncast
 
 # Crear la carpeta de videos si no existe
 mkdir -p "$VIDEO_DIR"
