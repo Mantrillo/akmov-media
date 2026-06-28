@@ -53,13 +53,21 @@ const captchaIn   = document.getElementById('captchaInput');
 const pingDot     = document.getElementById('pingDot');
 const pingLabel   = document.getElementById('pingLabel');
 
-const autodjBadge     = document.getElementById('autodjBadge');
-const autodjBadgeTxt  = document.getElementById('autodjBadgeText');
-const autodjStateEl   = document.getElementById('autodjState');
-const autodjUpdatedEl = document.getElementById('autodjUpdated');
-const autodjLogEl     = document.getElementById('autodjLog');
-const btnStop         = document.getElementById('btnStop');
-const btnStart        = document.getElementById('btnStart');
+const owncastBadge        = document.getElementById('owncastBadge');
+const owncastBadgeText    = document.getElementById('owncastBadgeText');
+const owncastServiceState = document.getElementById('owncastServiceState');
+const owncastStreamState  = document.getElementById('owncastStreamState');
+const owncastViewers      = document.getElementById('owncastViewers');
+const owncastUpdated      = document.getElementById('owncastUpdated');
+const owncastStats        = document.getElementById('owncastStats');
+const btnOpenChat         = document.getElementById('btnOpenChat');
+const btnBypass           = document.getElementById('btnBypass');
+
+const obsConnectionBadge = document.getElementById('obsConnectionBadge');
+const obsConnectionText  = document.getElementById('obsConnectionText');
+const obsActiveScene     = document.getElementById('obsActiveScene');
+const obsStreamingState  = document.getElementById('obsStreamingState');
+const localObsCard       = document.getElementById('localObsCard');
 
 const streamKeyVal    = document.getElementById('streamKeyVal');
 const revealKeyBtn    = document.getElementById('revealKeyBtn');
@@ -178,76 +186,106 @@ function setApiStatus(online) {
   }
 }
 
-// ─── AUTODJ STATUS ────────────────────────────────────────────
-async function fetchAutodjStatus() {
+// ─── OWNCAST STATUS ───────────────────────────────────────────
+async function fetchOwncastStatus() {
   try {
     const data = await apiCall('/status');
     setApiStatus(true);
-    updateAutodjUI(data.active, data.log || '');
+    updateOwncastUI(data.active, data.live || { online: false, viewerCount: 0 }, data.obs || { online: false, scene: '—', streaming: false });
   } catch {
     setApiStatus(false);
-    updateAutodjUI(null, '// No se puede conectar a la API del servidor.\n// Asegúrate de que admin-api.js esté corriendo en el servidor.');
+    updateOwncastUI(null, { online: false, viewerCount: 0 }, { online: false, scene: '—', streaming: false });
   }
 }
 
-function updateAutodjUI(active, log) {
+function updateOwncastUI(serviceActive, live, obs) {
   const now = new Date().toLocaleTimeString('es-CL');
-  autodjUpdatedEl.textContent = now;
+  owncastUpdated.textContent = now;
 
-  if (active === true) {
-    autodjStateEl.textContent = 'ACTIVO ✓';
-    autodjStateEl.style.color = 'var(--neon)';
-    autodjBadge.className = 'autodj-badge running';
-    autodjBadgeTxt.textContent = 'TRANSMITIENDO';
-  } else if (active === false) {
-    autodjStateEl.textContent = 'DETENIDO';
-    autodjStateEl.style.color = 'var(--red)';
-    autodjBadge.className = 'autodj-badge stopped';
-    autodjBadgeTxt.textContent = 'INACTIVO';
+  if (serviceActive === true) {
+    owncastServiceState.textContent = 'ACTIVO ✓';
+    owncastServiceState.style.color = 'var(--neon)';
+    
+    if (live.online) {
+      owncastStreamState.textContent = 'EN VIVO 🔴';
+      owncastStreamState.style.color = 'var(--red)';
+      owncastBadge.className = 'autodj-badge running';
+      owncastBadgeText.textContent = 'TRANSMITIENDO';
+      owncastStats.textContent = `// Transmisión activa\n// Espectadores actuales: ${live.viewerCount}\n// Conectado desde: ${live.lastConnectTime ? new Date(live.lastConnectTime).toLocaleTimeString('es-CL') : 'N/A'}`;
+    } else {
+      owncastStreamState.textContent = 'INACTIVO';
+      owncastStreamState.style.color = 'var(--text-muted)';
+      owncastBadge.className = 'autodj-badge stopped';
+      owncastBadgeText.textContent = 'INACTIVO';
+      owncastStats.textContent = '// Servidor listo para recibir transmisiones de OBS.';
+    }
+    owncastViewers.textContent = live.viewerCount;
+  } else if (serviceActive === false) {
+    owncastServiceState.textContent = 'CAÍDO ❌';
+    owncastServiceState.style.color = 'var(--red)';
+    owncastStreamState.textContent = 'OFFLINE';
+    owncastStreamState.style.color = 'var(--red)';
+    owncastBadge.className = 'autodj-badge stopped';
+    owncastBadgeText.textContent = 'OFFLINE';
+    owncastStats.textContent = '// El servicio Owncast está apagado en el servidor.';
+    owncastViewers.textContent = '0';
   } else {
-    autodjStateEl.textContent = '—';
-    autodjStateEl.style.color = '';
-    autodjBadge.className = 'autodj-badge';
-    autodjBadgeTxt.textContent = 'SIN DATOS';
+    owncastServiceState.textContent = '—';
+    owncastServiceState.style.color = '';
+    owncastStreamState.textContent = '—';
+    owncastStreamState.style.color = '';
+    owncastBadge.className = 'autodj-badge';
+    owncastBadgeText.textContent = 'SIN DATOS';
+    owncastStats.textContent = '// No se pudo obtener conexión con la API.';
+    owncastViewers.textContent = '0';
   }
 
-  if (log) {
-    autodjLogEl.textContent = log;
-    // Scroll al final del log
-    autodjLogEl.scrollTop = autodjLogEl.scrollHeight;
+  // --- RENDER LOCAL OBS CARD ---
+  if (obs.online) {
+    obsConnectionBadge.className = 'autodj-badge running';
+    obsConnectionText.textContent = 'ONLINE';
+    obsActiveScene.textContent = obs.scene || '—';
+    obsStreamingState.textContent = obs.streaming ? 'TRANSMITIENDO 🔴' : 'DETENIDO';
+    obsStreamingState.style.color = obs.streaming ? 'var(--neon)' : 'var(--text-muted)';
+    localObsCard.style.borderColor = 'var(--neon)';
+  } else {
+    obsConnectionBadge.className = 'autodj-badge stopped';
+    obsConnectionText.textContent = 'OFFLINE';
+    obsActiveScene.textContent = '—';
+    obsStreamingState.textContent = 'DESCONECTADO';
+    obsStreamingState.style.color = 'var(--red)';
+    localObsCard.style.borderColor = 'var(--text-muted)';
   }
 }
 
-// ─── AUTODJ CONTROLS ─────────────────────────────────────────
-btnStop.addEventListener('click', async () => {
-  btnStop.disabled = true;
+// ─── OWNCAST CONTROLS ────────────────────────────────────────
+btnBypass.addEventListener('click', async () => {
+  const confirmAction = confirm('¿Seguro que deseas liberar la señal? Esto desconectará al locutor o AutoDJ que esté transmitiendo en este momento.');
+  if (!confirmAction) return;
+
+  btnBypass.disabled = true;
   try {
-    await apiCall('/autodj/stop', 'POST');
-    toast('AutoDJ detenido. OBS puede conectarse.', 'success');
-    await fetchAutodjStatus();
+    await apiCall('/owncast/restart', 'POST');
+    toast('Señal liberada. Ya puedes iniciar una nueva transmisión.', 'success');
+    await fetchOwncastStatus();
   } catch {
-    toast('Error al detener el AutoDJ. ¿La API está online?', 'error');
+    toast('Error al reiniciar el servicio de Owncast.', 'error');
   }
-  btnStop.disabled = false;
+  btnBypass.disabled = false;
 });
 
-btnStart.addEventListener('click', async () => {
-  btnStart.disabled = true;
-  try {
-    await apiCall('/autodj/start', 'POST');
-    toast('AutoDJ iniciado. Retomando transmisión 24/7.', 'success');
-    await fetchAutodjStatus();
-  } catch {
-    toast('Error al iniciar el AutoDJ. ¿La API está online?', 'error');
-  }
-  btnStart.disabled = false;
+btnOpenChat.addEventListener('click', () => {
+  const domain = CONFIG.API_BASE.replace('api.', 'stream.').replace(':3001', ':8080');
+  const chatUrl = `${domain}/embed/chat`;
+  window.open(chatUrl, 'OwncastChat', 'width=420,height=650,menubar=no,toolbar=no,location=no,status=no,resizable=yes,scrollbars=yes');
+  toast('Abriendo chat flotante...', 'info');
 });
 
 // ─── POLLING ─────────────────────────────────────────────────
 
 function startPolling() {
-  fetchAutodjStatus();
-  pollTimer = setInterval(fetchAutodjStatus, CONFIG.POLL_INTERVAL);
+  fetchOwncastStatus();
+  pollTimer = setInterval(fetchOwncastStatus, CONFIG.POLL_INTERVAL);
 }
 
 function stopPolling() {

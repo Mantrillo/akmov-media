@@ -89,48 +89,81 @@
       <!-- LEFT COLUMN -->
       <div class="admin-col">
 
-        <!-- AUTODJ CARD -->
+        <!-- OWNCAST CARD -->
         <div class="admin-card card-autodj">
           <div class="card-header">
             <div class="card-title-group">
               <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6zm-2 16c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
-              <h2 class="card-title">AUTODJ — CONTROL</h2>
+              <h2 class="card-title">OWNCAST — SERVIDOR</h2>
             </div>
-            <div class="autodj-badge" id="autodjBadge">
+            <div class="autodj-badge" id="owncastBadge">
               <span class="badge-dot"></span>
-              <span id="autodjBadgeText">CARGANDO...</span>
+              <span id="owncastBadgeText">CARGANDO...</span>
             </div>
           </div>
 
-          <div class="status-grid">
+          <div class="status-grid" style="grid-template-columns: repeat(2, 1fr); gap: 10px;">
             <div class="status-item">
-              <span class="status-key">ESTADO</span>
-              <span class="status-val" id="autodjState">—</span>
+              <span class="status-key">SERVICIO OWNCAST</span>
+              <span class="status-val" id="owncastServiceState">—</span>
+            </div>
+            <div class="status-item">
+              <span class="status-key">EMISIÓN EN VIVO</span>
+              <span class="status-val" id="owncastStreamState">—</span>
+            </div>
+            <div class="status-item">
+              <span class="status-key">ESPECTADORES</span>
+              <span class="status-val" id="owncastViewers">0</span>
             </div>
             <div class="status-item">
               <span class="status-key">ACTUALIZADO</span>
-              <span class="status-val" id="autodjUpdated">—</span>
+              <span class="status-val" id="owncastUpdated">—</span>
             </div>
           </div>
 
-          <div class="log-box" id="autodjLog">
-            <span class="log-placeholder">// Esperando datos del servidor...</span>
+          <div class="log-box" id="owncastStats" style="height: 80px;">
+            <span class="log-placeholder">// Esperando datos de Owncast...</span>
           </div>
 
-          <div class="autodj-actions">
-            <button class="action-btn btn-stop" id="btnStop">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12v12H6z"/></svg>
-              <span>DETENER AutoDJ</span>
+          <div class="autodj-actions" style="gap: 10px;">
+            <button class="action-btn btn-start" id="btnOpenChat" style="background: var(--bg-card); border: 1px solid var(--neon); color: var(--neon);">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+              <span>ABRIR CHAT</span>
             </button>
-            <button class="action-btn btn-start" id="btnStart">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-              <span>INICIAR AutoDJ</span>
+            <button class="action-btn btn-stop" id="btnBypass" style="background: var(--red); color: white; border: none;">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+              <span>LIBERAR SEÑAL (BYPASS)</span>
             </button>
           </div>
 
           <p class="autodj-hint">
-            ⚡ Detén el AutoDJ antes de que tu amigo conecte OBS. Al terminar el live, vuelve a iniciarlo.
+            ⚡ <b>Liberar Señal (Bypass):</b> Fuerza la desconexión del emisor actual (ej. OBS de AutoDJ) para permitir que otro locutor se conecte inmediatamente.
           </p>
+        </div>
+
+        <!-- LOCAL OBS AUTODJ CARD -->
+        <div class="admin-card card-autodj" id="localObsCard" style="border-color: var(--text-muted); margin-bottom: 20px;">
+          <div class="card-header">
+            <div class="card-title-group">
+              <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
+              <h2 class="card-title">AUTODJ LOCAL (NOTEBOOK)</h2>
+            </div>
+            <div class="autodj-badge stopped" id="obsConnectionBadge">
+              <span class="badge-dot"></span>
+              <span id="obsConnectionText">OFFLINE</span>
+            </div>
+          </div>
+
+          <div class="status-grid" style="grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 0;">
+            <div class="status-item">
+              <span class="status-key">ESCENA ACTIVA OBS</span>
+              <span class="status-val" id="obsActiveScene" style="color: var(--neon); font-size: 0.75rem;">—</span>
+            </div>
+            <div class="status-item">
+              <span class="status-key">EMISIÓN LOCAL</span>
+              <span class="status-val" id="obsStreamingState">—</span>
+            </div>
+          </div>
         </div>
 
         <!-- OBS INFO CARD -->
