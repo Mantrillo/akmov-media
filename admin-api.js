@@ -22,24 +22,8 @@ const path       = require('path');
 const app  = express();
 const PORT = 3001;
 
-// ─── CORS: Solo permite requests desde tu dominio ─────────────
-app.use(cors({
-  origin: [
-    'http://localhost',
-    'http://localhost:8080',
-    'http://192.168.1.15',
-    'http://192.168.1.15:8080',
-    'http://akmovmedia.duckdns.org',
-    'http://akmovmedia.duckdns.org:8080',
-    'https://akmovmedia.duckdns.org',
-    'https://akmovmedia.duckdns.org:8080',
-    'http://akmovmedia.com',
-    'https://akmovmedia.com',
-    'http://stream.akmovmedia.com',
-    'https://stream.akmovmedia.com',
-  ],
-  methods: ['GET', 'POST'],
-}));
+// ─── CORS: Permitir acceso general para evitar problemas de origen ─────────────
+app.use(cors());
 
 app.use(express.json());
 
