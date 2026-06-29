@@ -606,10 +606,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function checkStreamStatus() {
     try {
-      const res = await fetch(`${AKMOV_API_BASE}/status`);
+      const res = await fetch(`https://stream.akmovmedia.com/api/status`);
       if (res.ok) {
         const data = await res.json();
-        const isLive = data.live && data.live.online;
+        const isLive = !!data.online;
         
         if (isLive !== isStreamLive) {
           isStreamLive = isLive;
