@@ -103,16 +103,8 @@
         <div class="monitor-wrapper">
           <div class="live-player-layout">
             <div class="live-player" id="mainVideoPlayer" style="padding: 0; background: #000;">
-              <!-- Embedded Owncast Player con selector de calidad nativo -->
-              <iframe id="owncastIframe" src="https://stream.akmovmedia.com/embed/video" style="width: 100%; height: 100%; border: none;" allowfullscreen allow="autoplay; encrypted-media"></iframe>
-              
-              <!-- Custom Offline Bouncing DVD Overlay -->
-              <div id="offlineOverlay" class="offline-overlay hidden">
-                <div id="bouncingLogo" class="bouncing-logo">
-                  <img src="logo.svg" alt="AKMOV MEDIA">
-                  <span class="offline-badge">FUERA DE LÍNEA</span>
-                </div>
-              </div>
+              <!-- Embedded Owncast Player con selector de calidad nativo y soporte Chromecast (presentation) -->
+              <iframe src="https://stream.akmovmedia.com/embed/video" style="width: 100%; height: 100%; border: none;" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture; presentation"></iframe>
             </div>
 
             <!-- CHAT SIDEBAR (Embedded Owncast Chat) -->
@@ -362,7 +354,7 @@
   </div> <!-- Close #mainPortal -->
 
   <script src="config.js"></script>
-  <script src="app.js?v=3.0"></script>
+  <script src="app.js?v=5.0"></script>
 </body>
 </html>
 
