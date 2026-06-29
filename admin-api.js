@@ -9,9 +9,8 @@
  *   2. node admin-api.js &   (o configurar como servicio)
  *
  * ENDPOINTS:
- *   GET  /status         → Estado del servicio autodj
- *   POST /autodj/start   → Inicia el servicio autodj
- *   POST /autodj/stop    → Detiene el servicio autodj
+ *   GET  /status           → Estado del servicio Owncast y estadísticas en vivo
+ *   POST /owncast/restart  → Reinicia Owncast (Bypass / Liberar señal)
  */
 
 const express    = require('express');
@@ -24,7 +23,6 @@ const app  = express();
 const PORT = 3001;
 
 // ─── CORS: Solo permite requests desde tu dominio ─────────────
-// Cambia los origins si usas otro puerto o dominio
 app.use(cors({
   origin: [
     'http://localhost',
@@ -33,54 +31,121 @@ app.use(cors({
     'http://192.168.1.15:8080',
     'http://akmovmedia.duckdns.org',
     'http://akmovmedia.duckdns.org:8080',
-    // Agrega aquí el origen del panel admin si lo sirves diferente
+    'https://akmovmedia.duckdns.org',
+    'https://akmovmedia.duckdns.org:8080',
+    'http://akmovmedia.com',
+    'https://akmovmedia.com',
+    'http://stream.akmovmedia.com',
+    'https://stream.akmovmedia.com',
   ],
   methods: ['GET', 'POST'],
 }));
 
 app.use(express.json());
 
-// ─── LOG HELPER ───────────────────────────────────────────────
-const LOG_FILE = '/home/mantrillo/autodj.log';
+// ─── OBS LOCAL STATUS STORAGE ─────────────────────────────────
+let lastObsStatus = {
+  online: false,
+  scene: '—',
+  streaming: false,
+  lastUpdate: null
+};
 
-function getLastLogLines(n = 10) {
-  try {
-    const content = fs.readFileSync(LOG_FILE, 'utf8');
-    const lines = content.trim().split('\n');
-    return lines.slice(-n).join('\n');
-  } catch {
-    return '// Log no disponible';
-  }
-}
-
-// ─── STATUS ───────────────────────────────────────────────────
+// ─── STATUS (Owncast service status + Live stream data + OBS status) ───────
 app.get('/status', (req, res) => {
-  exec('systemctl is-active autodj', (err, stdout) => {
-    const active = stdout.trim() === 'active';
-    const log    = getLastLogLines(12);
-    res.json({ active, log, timestamp: new Date().toISOString() });
+  exec('systemctl is-active owncast', async (err, stdout) => {
+    let serviceActive = stdout.trim() === 'active';
+    let liveData = { online: false, viewerCount: 0 };
+    
+    // Intentar conectar al API local de Owncast siempre
+    try {
+      const response = await fetch('http://localhost:8080/api/status');
+      if (response.ok) {
+        const data = await response.json();
+        liveData = {
+          online: data.online || false,
+          viewerCount: data.viewerCount || 0,
+          lastConnectTime: data.lastConnectTime || null,
+          overallMaxViewerCount: data.overallMaxViewerCount || 0,
+        };
+        // Si el puerto responde, Owncast definitivamente está activo
+        serviceActive = true;
+      }
+    } catch (e) {
+      // Si falla la conexión HTTP y systemd dice inactivo, entonces sí está caído
+      console.log('Owncast HTTP API offline');
+    }
+
+    // Comprobar si el notebook del AutoDJ local se desconectó (ej. más de 30 segs sin reporte)
+    const obsOnline = lastObsStatus.lastUpdate && 
+                      (new Date() - new Date(lastObsStatus.lastUpdate) < 30000);
+
+    res.json({
+      active: serviceActive,
+      live: liveData,
+      obs: {
+        online: !!obsOnline,
+        scene: lastObsStatus.scene,
+        streaming: lastObsStatus.streaming,
+        lastUpdate: lastObsStatus.lastUpdate
+      },
+      timestamp: new Date().toISOString()
+    });
   });
 });
 
-// ─── START AUTODJ ─────────────────────────────────────────────
-app.post('/autodj/start', (req, res) => {
-  exec('sudo systemctl start autodj', (err, stdout, stderr) => {
+// ─── OBS STATUS ENDPOINTS ─────────────────────────────────────
+app.post('/obs/status', (req, res) => {
+  const { scene, streaming } = req.body;
+  lastObsStatus = {
+    online: true,
+    scene: scene || '—',
+    streaming: !!streaming,
+    lastUpdate: new Date().toISOString()
+  };
+  res.json({ success: true });
+});
+
+app.get('/obs/status', (req, res) => {
+  res.json(lastObsStatus);
+});
+
+// ─── SCHEDULE PERSISTENCE ENDPOINTS ───────────────────────────
+const SCHEDULE_FILE = path.join(__dirname, 'schedule.json');
+
+app.get('/schedule', (req, res) => {
+  fs.readFile(SCHEDULE_FILE, 'utf8', (err, data) => {
     if (err) {
-      console.error('Error starting autodj:', stderr);
-      return res.status(500).json({ success: false, error: stderr });
+      // Si no existe, retornar lista vacía o estructura por defecto
+      return res.json({ schedule: [] });
     }
-    res.json({ success: true, message: 'AutoDJ iniciado.' });
+    try {
+      res.json(JSON.parse(data));
+    } catch (e) {
+      res.json({ schedule: [] });
+    }
   });
 });
 
-// ─── STOP AUTODJ ──────────────────────────────────────────────
-app.post('/autodj/stop', (req, res) => {
-  exec('sudo systemctl stop autodj', (err, stdout, stderr) => {
+app.post('/schedule', (req, res) => {
+  const data = JSON.stringify(req.body, null, 2);
+  fs.writeFile(SCHEDULE_FILE, data, 'utf8', (err) => {
     if (err) {
-      console.error('Error stopping autodj:', stderr);
+      console.error('Error saving schedule:', err);
+      return res.status(500).json({ success: false, error: 'No se pudo guardar la programación.' });
+    }
+    res.json({ success: true });
+  });
+});
+
+// ─── RESTART OWNCAST (Bypass / Desconectar emisor actual) ─────
+app.post('/owncast/restart', (req, res) => {
+  exec('sudo systemctl restart owncast', (err, stdout, stderr) => {
+    if (err) {
+      console.error('Error restarting owncast:', stderr);
       return res.status(500).json({ success: false, error: stderr });
     }
-    res.json({ success: true, message: 'AutoDJ detenido.' });
+    res.json({ success: true, message: 'Señal de transmisión liberada.' });
   });
 });
 

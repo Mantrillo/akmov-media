@@ -1,0 +1,12 @@
+{
+  "name": "akmov-obs-scheduler",
+  "version": "1.0.0",
+  "description": "Sincronizador automático de OBS con Panel Web de AKMOV",
+  "main": "obs_sync_helper.js",
+  "scripts": {
+    "start": "node obs_sync_helper.js"
+  },
+  "dependencies": {
+    "obs-websocket-js": "^5.0.5"
+  }
+}

@@ -12,6 +12,7 @@ VIDEO_DIR="/mnt/videos"                    # Carpeta donde subirás tus videos (
 PLAYLIST_FILE="/tmp/owncast_playlist.txt"   # Archivo temporal de lista de reproducción
 OWNCAST_RTMP_URL="rtmp://localhost:1935/live"   # Dirección RTMP de tu Owncast
 STREAM_KEY="abc123"                         # Reemplaza por tu Stream Key de Owncast
+RANDOM_PLAY=true                            # ¿Reproducir en orden aleatorio? (true/false)
 
 # Crear la carpeta de videos si no existe
 mkdir -p "$VIDEO_DIR"
@@ -20,7 +21,7 @@ echo "=== Iniciando automatización 24/7 ==="
 echo "Buscando videos en: $VIDEO_DIR"
 
 while true; do
-    # Buscar todos los archivos .mp4 en la carpeta y ordenarlos alfabéticamente
+    # Buscar todos los archivos .mp4 en la carpeta
     files=("$VIDEO_DIR"/*.mp4)
     
     # Validar que existan videos
@@ -33,27 +34,36 @@ while true; do
 
     # Generar el archivo de lista de reproducción en el formato de FFmpeg
     echo "# Lista de videos generada el $(date)" > "$PLAYLIST_FILE"
-    for file in "${files[@]}"; do
-        # Escapar comillas simples para FFmpeg
-        escaped_file=$(echo "$file" | sed "s/'/'\\\\''/g")
-        echo "file '$escaped_file'" >> "$PLAYLIST_FILE"
-    done
+    
+    if [ "$RANDOM_PLAY" = true ]; then
+        echo "Modo aleatorio activado. Mezclando videos..."
+        # Mezclar la lista de archivos usando null-delimiters para manejar espacios de forma segura
+        printf '%s\0' "${files[@]}" | shuf -z | while IFS= read -r -d '' file; do
+            escaped_file=$(echo "$file" | sed "s/'/'\\\\''/g")
+            echo "file '$escaped_file'" >> "$PLAYLIST_FILE"
+        done
+    else
+        echo "Modo ordenado activado. Procesando videos alfabéticamente..."
+        for file in "${files[@]}"; do
+            escaped_file=$(echo "$file" | sed "s/'/'\\\\''/g")
+            echo "file '$escaped_file'" >> "$PLAYLIST_FILE"
+        done
+    fi
 
     echo "Lista de reproducción creada con $(cat "$PLAYLIST_FILE" | grep -c "^file ") videos."
     echo "Transmitiendo a Owncast..."
 
     # Ejecutar FFmpeg para transmitir la lista completa en tiempo real
     # -re: Lee el archivo a velocidad de reproducción nativa (tiempo real)
-    # -f concat: Junta los videos uno tras otro de forma fluida
-    # -safe 0: Permite rutas de archivos absolutas
-    # -c:v libx264: Codifica en H.264 (alta compatibilidad)
-    # -preset veryfast -maxrate 2500k -bufsize 5000k: Configuración de bitrate optimizada para streaming
-    # -pix_fmt yuv420p: Requerido por la mayoría de reproductores
-    # -c:a aac -b:a 128k: Codificación de audio limpia
-    ffmpeg -re -f concat -safe 0 -i "$PLAYLIST_FILE" \
-        -c:v libx264 -preset veryfast -tune zerolatency \
-        -maxrate 2500k -bufsize 5000k -pix_fmt yuv420p -g 60 \
-        -c:a aac -b:a 128k -ar 44100 \
+    # -fflags +genpts+discardcorrupt: Ignora paquetes corruptos y regenera timestamps
+    # -f concat: Junta los videos uno tras otro
+    # -safe 0: Permite rutas absolutas
+    # -vf scale=1280:720: Reduce la resolución a 720p para aliviar la carga de CPU
+    # -max_interleave_delta 0: Evita que FFmpeg se quede esperando indefinidamente si el audio y video se desfasan
+    ffmpeg -re -fflags +genpts+discardcorrupt -f concat -safe 0 -i "$PLAYLIST_FILE" \
+        -vf "scale=1280:720" -c:v libx264 -preset ultrafast -tune zerolatency \
+        -maxrate 2000k -bufsize 4000k -pix_fmt yuv420p -g 60 -fps_mode cfr \
+        -c:a aac -b:a 128k -ar 44100 -max_interleave_delta 0 \
         -f flv "$OWNCAST_RTMP_URL/$STREAM_KEY"
 
     echo "FFmpeg terminó la lista de reproducción. Reiniciando bucle en 5 segundos..."

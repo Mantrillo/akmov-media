@@ -24,23 +24,29 @@ document.addEventListener('DOMContentLoaded', () => {
       
       // Auto-play live video on portal unlock
       setTimeout(() => {
-        if (!isVideoPlaying) {
+        if (liveVideo && !isVideoPlaying) {
           isVideoPlaying = true;
-          videoVolumeSlider.value = 0.3;
+          if (videoVolumeSlider) videoVolumeSlider.value = 0.3;
           initVideoStream();
           liveVideo.volume = 0.3;
           liveVideo.muted = false;
-          mainVideoPlayer.classList.add('live-active');
-          iconPlayVideo.classList.add('hidden');
-          iconPauseVideo.classList.remove('hidden');
+          if (mainVideoPlayer) mainVideoPlayer.classList.add('live-active');
+          
+          const iconPlayVideo = videoPlayPauseBtn ? videoPlayPauseBtn.querySelector('.icon-play') : null;
+          const iconPauseVideo = videoPlayPauseBtn ? videoPlayPauseBtn.querySelector('.icon-pause') : null;
+          const iconVolumeHighVideo = videoMuteBtn ? videoMuteBtn.querySelector('.icon-volume-high') : null;
+          const iconVolumeMuteVideo = videoMuteBtn ? videoMuteBtn.querySelector('.icon-volume-mute') : null;
+
+          if (iconPlayVideo) iconPlayVideo.classList.add('hidden');
+          if (iconPauseVideo) iconPauseVideo.classList.remove('hidden');
           
           liveVideo.play().catch(err => {
             console.warn("Autoplay block: rendering with sound muted first", err);
             // Fallback: play muted if blocked by browser autoplay policy
             liveVideo.muted = true;
             isVideoMuted = true;
-            iconVolumeHighVideo.classList.add('hidden');
-            iconVolumeMuteVideo.classList.remove('hidden');
+            if (iconVolumeHighVideo) iconVolumeHighVideo.classList.add('hidden');
+            if (iconVolumeMuteVideo) iconVolumeMuteVideo.classList.remove('hidden');
             liveVideo.play().catch(e => console.error("Video play failed:", e));
           });
         }
@@ -94,11 +100,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const videoFullscreenBtn = document.getElementById('videoFullscreenBtn');
   const liveTimecode = document.getElementById('liveTimecode');
   
-  const iconPlayVideo = videoPlayPauseBtn.querySelector('.icon-play');
-  const iconPauseVideo = videoPlayPauseBtn.querySelector('.icon-pause');
-  const iconVolumeHighVideo = videoMuteBtn.querySelector('.icon-volume-high');
-  const iconVolumeMuteVideo = videoMuteBtn.querySelector('.icon-volume-mute');
-
   const STREAM_URL = "https://stream.akmovmedia.com/hls/stream.m3u8";
   let hlsInstance = null;
   let isVideoPlaying = false;
@@ -107,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize HLS stream on play
   function initVideoStream() {
-    if (hlsInstance) return; // Already initialized
+    if (!liveVideo || hlsInstance) return; // Already initialized or no video element
 
     if (Hls.isSupported()) {
       hlsInstance = new Hls({
@@ -160,6 +161,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Toggle Video Play/Pause State
   function toggleVideoPlayback() {
+    if (!liveVideo || !videoPlayPauseBtn || !videoMuteBtn) return;
+    
+    const iconPlayVideo = videoPlayPauseBtn.querySelector('.icon-play');
+    const iconPauseVideo = videoPlayPauseBtn.querySelector('.icon-pause');
+    
     isVideoPlaying = !isVideoPlaying;
     
     if (isVideoPlaying) {
@@ -169,17 +175,19 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       initVideoStream();
-      liveVideo.volume = parseFloat(videoVolumeSlider.value);
+      if (videoVolumeSlider) {
+        liveVideo.volume = parseFloat(videoVolumeSlider.value);
+      }
       liveVideo.muted = isVideoMuted;
       
-      mainVideoPlayer.classList.add('live-active');
+      if (mainVideoPlayer) mainVideoPlayer.classList.add('live-active');
       if (playerCover) {
         playerCover.style.opacity = '0';
         setTimeout(() => playerCover.classList.add('hidden'), 300);
       }
       
-      iconPlayVideo.classList.add('hidden');
-      iconPauseVideo.classList.remove('hidden');
+      if (iconPlayVideo) iconPlayVideo.classList.add('hidden');
+      if (iconPauseVideo) iconPauseVideo.classList.remove('hidden');
       
       // Auto-play the video
       if (liveVideo.paused) {
@@ -187,66 +195,84 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } else {
       liveVideo.pause();
-      mainVideoPlayer.classList.remove('live-active');
+      if (mainVideoPlayer) mainVideoPlayer.classList.remove('live-active');
       if (playerCover) {
         playerCover.classList.remove('hidden');
         setTimeout(() => playerCover.style.opacity = '1', 50);
       }
       
-      iconPlayVideo.classList.remove('hidden');
-      iconPauseVideo.classList.add('hidden');
+      if (iconPlayVideo) iconPlayVideo.classList.remove('hidden');
+      if (iconPauseVideo) iconPauseVideo.classList.add('hidden');
     }
   }
 
-  if (playerCover) playerCover.addEventListener('click', toggleVideoPlayback);
-  videoPlayPauseBtn.addEventListener('click', toggleVideoPlayback);
+  // Bind video player event listeners if elements exist
+  if (liveVideo && videoPlayPauseBtn && videoMuteBtn) {
+    const iconPlayVideo = videoPlayPauseBtn.querySelector('.icon-play');
+    const iconPauseVideo = videoPlayPauseBtn.querySelector('.icon-pause');
+    const iconVolumeHighVideo = videoMuteBtn.querySelector('.icon-volume-high');
+    const iconVolumeMuteVideo = videoMuteBtn.querySelector('.icon-volume-mute');
 
-  // Mute / Unmute Video Audio
-  videoMuteBtn.addEventListener('click', () => {
-    isVideoMuted = !isVideoMuted;
-    liveVideo.muted = isVideoMuted;
-    
-    if (isVideoMuted) {
-      videoVolumeBeforeMute = parseFloat(videoVolumeSlider.value);
-      videoVolumeSlider.value = 0;
-      iconVolumeHighVideo.classList.add('hidden');
-      iconVolumeMuteVideo.classList.remove('hidden');
-    } else {
-      videoVolumeSlider.value = videoVolumeBeforeMute;
-      liveVideo.volume = videoVolumeBeforeMute;
-      iconVolumeHighVideo.classList.remove('hidden');
-      iconVolumeMuteVideo.classList.add('hidden');
-    }
-  });
+    if (playerCover) playerCover.addEventListener('click', toggleVideoPlayback);
+    videoPlayPauseBtn.addEventListener('click', toggleVideoPlayback);
 
-  // Volume slider input
-  videoVolumeSlider.addEventListener('input', (e) => {
-    const val = parseFloat(e.target.value);
-    liveVideo.volume = val;
-    
-    if (val === 0) {
-      isVideoMuted = true;
-      liveVideo.muted = true;
-      iconVolumeHighVideo.classList.add('hidden');
-      iconVolumeMuteVideo.classList.remove('hidden');
-    } else {
-      isVideoMuted = false;
-      liveVideo.muted = false;
-      iconVolumeHighVideo.classList.remove('hidden');
-      iconVolumeMuteVideo.classList.add('hidden');
-    }
-  });
+    // Mute / Unmute Video Audio
+    videoMuteBtn.addEventListener('click', () => {
+      isVideoMuted = !isVideoMuted;
+      liveVideo.muted = isVideoMuted;
+      
+      if (isVideoMuted) {
+        if (videoVolumeSlider) {
+          videoVolumeBeforeMute = parseFloat(videoVolumeSlider.value);
+          videoVolumeSlider.value = 0;
+        }
+        if (iconVolumeHighVideo) iconVolumeHighVideo.classList.add('hidden');
+        if (iconVolumeMuteVideo) iconVolumeMuteVideo.classList.remove('hidden');
+      } else {
+        if (videoVolumeSlider) {
+          videoVolumeSlider.value = videoVolumeBeforeMute;
+        }
+        liveVideo.volume = videoVolumeBeforeMute;
+        if (iconVolumeHighVideo) iconVolumeHighVideo.classList.remove('hidden');
+        if (iconVolumeMuteVideo) iconVolumeMuteVideo.classList.add('hidden');
+      }
+    });
 
-  // Fullscreen video player
-  videoFullscreenBtn.addEventListener('click', () => {
-    if (!document.fullscreenElement) {
-      mainVideoPlayer.requestFullscreen().catch(err => {
-        console.error(`Error al intentar activar pantalla completa: ${err.message}`);
+    // Volume slider input
+    if (videoVolumeSlider) {
+      videoVolumeSlider.addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value);
+        liveVideo.volume = val;
+        
+        if (val === 0) {
+          isVideoMuted = true;
+          liveVideo.muted = true;
+          if (iconVolumeHighVideo) iconVolumeHighVideo.classList.add('hidden');
+          if (iconVolumeMuteVideo) iconVolumeMuteVideo.classList.remove('hidden');
+        } else {
+          isVideoMuted = false;
+          liveVideo.muted = false;
+          if (iconVolumeHighVideo) iconVolumeHighVideo.classList.remove('hidden');
+          if (iconVolumeMuteVideo) iconVolumeMuteVideo.classList.add('hidden');
+        }
       });
-    } else {
-      document.exitFullscreen();
     }
-  });
+
+    // Fullscreen video player
+    if (videoFullscreenBtn) {
+      videoFullscreenBtn.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+          if (mainVideoPlayer) {
+            mainVideoPlayer.requestFullscreen().catch(err => {
+              console.error(`Error al intentar activar pantalla completa: ${err.message}`);
+            });
+          }
+        } else {
+          document.exitFullscreen();
+        }
+      });
+    }
+  }
 
   // Dynamic Timecode (Simulating Broadcast Clock)
   function updateTimecode() {
@@ -312,6 +338,9 @@ document.addEventListener('DOMContentLoaded', () => {
   function toggleAudioPlayback() {
     isAudioPlaying = !isAudioPlaying;
 
+    const vinylPlatter = document.getElementById('vinylPlatter');
+    const turntableTonearm = document.getElementById('turntableTonearm');
+
     if (isAudioPlaying) {
       // Avoid dual audio overlap: pause video player if playing
       if (isVideoPlaying) {
@@ -337,6 +366,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const footerPlayIcon = footerListenBtn.querySelector('svg');
       footerPlayIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; // Pause icon path
       footerListenBtn.style.borderColor = "var(--color-neon)";
+
+      // Turntable animation active
+      if (vinylPlatter) vinylPlatter.classList.add('playing');
+      if (turntableTonearm) turntableTonearm.classList.add('playing');
     } else {
       liveAudioStream.pause();
       audioTrackName.textContent = "SEÑAL ONLINE - SINTONÍA DIGITAL STEREO (128 KBPS AAC)";
@@ -350,6 +383,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const footerPlayIcon = footerListenBtn.querySelector('svg');
       footerPlayIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; // Play icon path
       footerListenBtn.style.borderColor = "var(--color-gray-border)";
+
+      // Turntable animation inactive
+      if (vinylPlatter) vinylPlatter.classList.remove('playing');
+      if (turntableTonearm) turntableTonearm.classList.remove('playing');
     }
   }
 
@@ -488,6 +525,127 @@ document.addEventListener('DOMContentLoaded', () => {
           item.classList.add('active');
         }
       });
+    }
+  });
+
+  // ==========================================
+  // 4. OFFLINE OVERLAY & BOUNCING DVD LOGO
+  // ==========================================
+  const offlineOverlay = document.getElementById('offlineOverlay');
+  const bouncingLogo = document.getElementById('bouncingLogo');
+  const owncastIframe = document.getElementById('owncastIframe');
+  
+  let isStreamLive = true; // Default to true so it doesn't blink on load if live
+  let bounceRequestId = null;
+  
+  // Physics parameters for bouncing DVD logo
+  let x = 50;
+  let y = 50;
+  let dx = 2.0; // speed x
+  let dy = 1.5; // speed y
+  const logoWidth = 130;
+  const logoHeight = 75; // Approx height including badge in px
+
+  function updateBouncingLogo() {
+    if (!offlineOverlay || !bouncingLogo || offlineOverlay.classList.contains('hidden')) {
+      bounceRequestId = null;
+      return;
+    }
+    
+    const rect = offlineOverlay.getBoundingClientRect();
+    const containerW = rect.width;
+    const containerH = rect.height;
+    
+    if (containerW > 0 && containerH > 0) {
+      x += dx;
+      y += dy;
+      
+      // Collision detection Left/Right
+      if (x <= 0) {
+        x = 0;
+        dx = -dx;
+      } else if (x + logoWidth >= containerW) {
+        x = containerW - logoWidth;
+        dx = -dx;
+      }
+      
+      // Collision detection Top/Bottom
+      if (y <= 0) {
+        y = 0;
+        dy = -dy;
+      } else if (y + logoHeight >= containerH) {
+        y = containerH - logoHeight;
+        dy = -dy;
+      }
+      
+      bouncingLogo.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    }
+    
+    bounceRequestId = requestAnimationFrame(updateBouncingLogo);
+  }
+
+  function startBouncing() {
+    if (!bounceRequestId) {
+      dx = (Math.random() > 0.5 ? 1 : -1) * (1.2 + Math.random() * 1.0);
+      dy = (Math.random() > 0.5 ? 1 : -1) * (1.0 + Math.random() * 1.0);
+      if (offlineOverlay) {
+        const rect = offlineOverlay.getBoundingClientRect();
+        x = Math.max(10, (rect.width - logoWidth) / 2);
+        y = Math.max(10, (rect.height - logoHeight) / 2);
+      }
+      updateBouncingLogo();
+    }
+  }
+
+  function stopBouncing() {
+    if (bounceRequestId) {
+      cancelAnimationFrame(bounceRequestId);
+      bounceRequestId = null;
+    }
+  }
+
+  async function checkStreamStatus() {
+    try {
+      const res = await fetch(`${AKMOV_API_BASE}/status`);
+      if (res.ok) {
+        const data = await res.json();
+        const isLive = data.live && data.live.online;
+        
+        if (isLive !== isStreamLive) {
+          isStreamLive = isLive;
+        }
+
+        // Adjust visibility accordingly
+        if (isLive) {
+          if (offlineOverlay) offlineOverlay.classList.add('hidden');
+          if (owncastIframe) owncastIframe.style.display = 'block';
+          stopBouncing();
+        } else {
+          if (offlineOverlay) offlineOverlay.classList.remove('hidden');
+          if (owncastIframe) owncastIframe.style.display = 'none';
+          startBouncing();
+        }
+      }
+    } catch (err) {
+      console.warn("Error checking stream status:", err);
+      // Fallback: show custom offline screen if API fails
+      if (offlineOverlay) offlineOverlay.classList.remove('hidden');
+      if (owncastIframe) owncastIframe.style.display = 'none';
+      startBouncing();
+    }
+  }
+
+  // Poll stream status every 15 seconds
+  setInterval(checkStreamStatus, 15000);
+  // Initial check
+  checkStreamStatus();
+
+  // Resize handler to keep logo within bounds on window resize
+  window.addEventListener('resize', () => {
+    if (offlineOverlay && !offlineOverlay.classList.contains('hidden')) {
+      const rect = offlineOverlay.getBoundingClientRect();
+      if (x + logoWidth > rect.width) x = Math.max(0, rect.width - logoWidth);
+      if (y + logoHeight > rect.height) y = Math.max(0, rect.height - logoHeight);
     }
   });
 

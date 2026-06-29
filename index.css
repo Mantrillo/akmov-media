@@ -993,21 +993,90 @@ a {
   align-items: center;
 }
 
-.sticky-brand {
-  margin-right: 15px;
-}
-
-.brand-square {
-  width: 38px;
-  height: 38px;
-  background-color: var(--color-white);
-  color: var(--color-black);
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.2rem;
+/* Turntable / Tocadisco Animation */
+.turntable-container {
+  margin-right: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.turntable-body {
+  width: 48px;
+  height: 48px;
+  background-color: #121212;
+  border: 1px solid var(--color-gray-border);
+  position: relative;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vinyl-platter {
+  width: 38px;
+  height: 38px;
+  background-color: #080808;
+  border-radius: 50%;
+  border: 1px solid #1c1c1c;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s linear;
+}
+
+.vinyl-platter.playing {
+  animation: spin 2.5s linear infinite;
+}
+
+.vinyl-grooves {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle, transparent 30%, rgba(255,255,255,0.03) 35%, transparent 40%, rgba(255,255,255,0.03) 45%, transparent 50%, rgba(255,255,255,0.03) 55%, transparent 60%);
+}
+
+.vinyl-label {
+  width: 12px;
+  height: 12px;
+  background-color: var(--color-neon);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-black);
+  z-index: 2;
+}
+
+.vinyl-logo-star {
+  width: 8px;
+  height: 8px;
+}
+
+.turntable-tonearm {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 16px;
+  height: 32px;
+  transform-origin: 10px 6px;
+  transform: rotate(-15deg);
+  transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.turntable-tonearm.playing {
+  transform: rotate(15deg);
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .sticky-play-btn {
@@ -2007,6 +2076,61 @@ a {
     min-height: 400px;
     height: 400px;
   }
+}
+
+/* Custom offline bouncing logo overlay */
+.offline-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #050505;
+  z-index: 10;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.offline-overlay.hidden {
+  display: none !important;
+}
+
+.bouncing-logo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 130px;
+  height: auto;
+  pointer-events: none;
+  transition: filter 0.1s ease;
+  will-change: transform;
+}
+
+.bouncing-logo img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.offline-badge {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  color: #fff;
+  background-color: rgba(255, 0, 0, 0.75);
+  padding: 2px 6px;
+  border-radius: 2px;
+  margin-top: 5px;
+  font-weight: bold;
+  border: 1px solid #ff3333;
+  box-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
+  text-transform: uppercase;
 }
 
 
