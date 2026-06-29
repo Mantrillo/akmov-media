@@ -200,6 +200,13 @@ a {
   width: 100%;
   aspect-ratio: 16 / 9;
   background-color: #050505;
+  overflow: hidden; /* Crop status bar area at the bottom */
+}
+
+.live-player iframe {
+  width: 100%;
+  height: calc(100% + 46px) !important; /* Push Owncast status bar out of bounds */
+  border: none;
 }
 
 /* 4-Camera Grid Simulation */
