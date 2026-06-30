@@ -204,6 +204,9 @@ a {
 }
 
 .live-player iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: calc(100% + 46px) !important; /* Push Owncast status bar out of bounds */
   border: none;
@@ -1616,6 +1619,8 @@ a {
   width: 72%;
   aspect-ratio: 16 / 9;
   background-color: #050505;
+  overflow: hidden;
+  align-self: flex-start;
 }
 
 .live-chat-sidebar {
