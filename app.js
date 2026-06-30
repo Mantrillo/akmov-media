@@ -528,5 +528,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // ==========================================
+  // 5. CARGA DINÁMICA DE VIDEOS YOUTUBE (ON DEMAND)
+  // ==========================================
+  (async function loadYouTubeVideos() {
+    const container = document.getElementById('youtubeOnDemandContainer');
+    if (!container) return;
+
+    function renderVideos(videos) {
+      container.innerHTML = videos.map(video => {
+        return `
+          <a href="${video.link}" target="_blank" rel="noopener noreferrer" class="ondemand-card">
+            <div class="card-thumbnail" style="background-image: url('${video.thumbnail}'); background-size: cover; background-position: center;">
+              <div class="thumbnail-overlay">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="play-small-icon"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+              <div class="card-badge">YOUTUBE</div>
+            </div>
+            <div class="card-info">
+              <h3>${video.title}</h3>
+              <p>${video.views ? `${video.views} • ` : ''}${video.published || ''}</p>
+            </div>
+          </a>`;
+      }).join('');
+    }
+
+    try {
+      const res = await fetch(AKMOV_API_BASE + '/youtube/videos');
+      const data = await res.json();
+      if (data && data.success && Array.isArray(data.videos) && data.videos.length > 0) {
+        renderVideos(data.videos);
+      }
+    } catch (err) {
+      console.warn("No se pudieron cargar los videos de YouTube desde la API. Usando respaldo estático.", err);
+    }
+  })();
+
 });
 
