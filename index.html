@@ -3,8 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AKMOV MEDIA - Streaming & Radio Online</title>
-  <meta name="description" content="Plataforma de streaming multimedia y radio online de alta definición. Transmisión en vivo 24/7 de música, cultura y medios digitales.">
+  <title>AKMOV MEDIA - Radio & TV Online | Valle del Huasco, Región de Atacama</title>
+  <meta name="description" content="Señal online 24/7 de televisión digital y radio de alta definición para Vallenar, Huasco, Freirina y Alto del Carmen. Transmisión de música, cultura y medios digitales de la Región de Atacama.">
+  <meta name="keywords" content="akmov media, radio online vallenar, tv online vallenar, valle del huasco, region de atacama, radio huasco, freirina online, alto del carmen en vivo, streaming vallenar, television digital atacama, multimedia huasco, señal en vivo vallenar">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://akmovmedia.com/">
+  <meta property="og:title" content="AKMOV MEDIA - Radio & TV Online | Valle del Huasco, Región de Atacama">
+  <meta property="og:description" content="Señal online de televisión digital y radio de alta definición para Vallenar, Huasco, Freirina y Alto del Carmen. Música, cultura e innovación multimedia 24/7.">
+  <meta property="og:image" content="https://akmovmedia.com/logo.png">
+
+  <!-- Twitter / X -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://akmovmedia.com/">
+  <meta property="twitter:title" content="AKMOV MEDIA - Radio & TV Online | Valle del Huasco, Región de Atacama">
+  <meta property="twitter:description" content="Señal online de televisión digital y radio de alta definición para Vallenar, Huasco, Freirina y Alto del Carmen. Música, cultura e innovación multimedia 24/7.">
+  <meta property="twitter:image" content="https://akmovmedia.com/logo.png">
+  
+  <meta name="robots" content="index, follow">
   
   <!-- Google Fonts: Oswald (Brutalist, heavy) and Montserrat (Clean, professional) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,7 +37,7 @@
 <body>
 
   <!-- MAINTENANCE SCREEN -->
-  <div id="maintenanceScreen" class="maintenance-view">
+  <div id="maintenanceScreen" class="maintenance-view hidden">
     <div class="maintenance-container">
       <img class="maintenance-logo" src="logo.svg" alt="AKMOV MEDIA Logo">
       <h1 class="maintenance-title">SITIO EN CONSTRUCCIÓN</h1>
@@ -71,7 +88,7 @@
   </div>
 
   <!-- MAIN PORTAL WRAPPER (HIDDEN IF NOT LOGGED IN) -->
-  <div id="mainPortal" class="portal-view hidden">
+  <div id="mainPortal" class="portal-view">
 
     <!-- FIXED NAVBAR -->
     <header class="navbar">
@@ -101,6 +118,17 @@
       <div class="player-container">
         <!-- Neon Green Border Wrapper -->
         <div class="monitor-wrapper">
+          <!-- BRUTALIST ADVERTISING BANNER -->
+          <div class="brutalist-ad-banner">
+            <div class="ad-badge">PUBLICIDAD</div>
+            <div class="ad-ticker-wrap">
+              <div class="ad-ticker-text">
+                <span>★ ESPACIO DISPONIBLE PARA PUBLICIDAD • CONTÁCTANOS EN <a href="https://akmovmedia.com" target="_blank" rel="noopener noreferrer">AKMOVMEDIA.COM</a> • POTENCIA TU MARCA AQUÍ ★</span>
+                <span>★ ESPACIO DISPONIBLE PARA PUBLICIDAD • CONTÁCTANOS EN <a href="https://akmovmedia.com" target="_blank" rel="noopener noreferrer">AKMOVMEDIA.COM</a> • POTENCIA TU MARCA AQUÍ ★</span>
+              </div>
+            </div>
+          </div>
+
           <div class="live-player-layout">
             <div class="live-player" id="mainVideoPlayer">
               <!-- Real Live Video Element -->

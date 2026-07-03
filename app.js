@@ -10,83 +10,44 @@ document.addEventListener('DOMContentLoaded', () => {
   const adminPassword = document.getElementById('adminPassword');
   const loginError = document.getElementById('loginError');
 
-  // Secret access password
-  const ACCESS_PASSWORD = "akmov2026";
+  // Open access to the main portal: hide maintenance and login views.
+  function initPortalAccess() {
+    if (maintenanceScreen) maintenanceScreen.classList.add('hidden');
+    if (loginScreen) loginScreen.classList.add('hidden');
+    if (mainPortal) mainPortal.classList.remove('hidden');
+    
+    // Auto-play live video on page load
+    setTimeout(() => {
+      if (liveVideo && !isVideoPlaying) {
+        isVideoPlaying = true;
+        if (videoVolumeSlider) videoVolumeSlider.value = 0.3;
+        initVideoStream();
+        liveVideo.volume = 0.3;
+        liveVideo.muted = false;
+        if (mainVideoPlayer) mainVideoPlayer.classList.add('live-active');
+        
+        const iconPlayVideo = videoPlayPauseBtn ? videoPlayPauseBtn.querySelector('.icon-play') : null;
+        const iconPauseVideo = videoPlayPauseBtn ? videoPlayPauseBtn.querySelector('.icon-pause') : null;
+        const iconVolumeHighVideo = videoMuteBtn ? videoMuteBtn.querySelector('.icon-volume-high') : null;
+        const iconVolumeMuteVideo = videoMuteBtn ? videoMuteBtn.querySelector('.icon-volume-mute') : null;
 
-  function checkRouting() {
-    const isAuthenticated = localStorage.getItem('akmov_authenticated') === 'true';
-    const isSecretRoute = window.location.hash === '#administreichon';
-
-    if (isAuthenticated) {
-      if (maintenanceScreen) maintenanceScreen.classList.add('hidden');
-      if (loginScreen) loginScreen.classList.add('hidden');
-      if (mainPortal) mainPortal.classList.remove('hidden');
-      
-      // Auto-play live video on portal unlock
-      setTimeout(() => {
-        if (liveVideo && !isVideoPlaying) {
-          isVideoPlaying = true;
-          if (videoVolumeSlider) videoVolumeSlider.value = 0.3;
-          initVideoStream();
-          liveVideo.volume = 0.3;
-          liveVideo.muted = false;
-          if (mainVideoPlayer) mainVideoPlayer.classList.add('live-active');
-          
-          const iconPlayVideo = videoPlayPauseBtn ? videoPlayPauseBtn.querySelector('.icon-play') : null;
-          const iconPauseVideo = videoPlayPauseBtn ? videoPlayPauseBtn.querySelector('.icon-pause') : null;
-          const iconVolumeHighVideo = videoMuteBtn ? videoMuteBtn.querySelector('.icon-volume-high') : null;
-          const iconVolumeMuteVideo = videoMuteBtn ? videoMuteBtn.querySelector('.icon-volume-mute') : null;
-
-          if (iconPlayVideo) iconPlayVideo.classList.add('hidden');
-          if (iconPauseVideo) iconPauseVideo.classList.remove('hidden');
-          
-          liveVideo.play().catch(err => {
-            console.warn("Autoplay block: rendering with sound muted first", err);
-            // Fallback: play muted if blocked by browser autoplay policy
-            liveVideo.muted = true;
-            isVideoMuted = true;
-            if (iconVolumeHighVideo) iconVolumeHighVideo.classList.add('hidden');
-            if (iconVolumeMuteVideo) iconVolumeMuteVideo.classList.remove('hidden');
-            liveVideo.play().catch(e => console.error("Video play failed:", e));
-          });
-        }
-      }, 600);
-    } else {
-      if (mainPortal) mainPortal.classList.add('hidden');
-      if (isSecretRoute) {
-        if (maintenanceScreen) maintenanceScreen.classList.add('hidden');
-        if (loginScreen) loginScreen.classList.remove('hidden');
-        if (adminPassword) adminPassword.focus();
-      } else {
-        if (maintenanceScreen) maintenanceScreen.classList.remove('hidden');
-        if (loginScreen) loginScreen.classList.add('hidden');
+        if (iconPlayVideo) iconPlayVideo.classList.add('hidden');
+        if (iconPauseVideo) iconPauseVideo.classList.remove('hidden');
+        
+        liveVideo.play().catch(err => {
+          console.warn("Autoplay block: rendering with sound muted first", err);
+          liveVideo.muted = true;
+          isVideoMuted = true;
+          if (iconVolumeHighVideo) iconVolumeHighVideo.classList.add('hidden');
+          if (iconVolumeMuteVideo) iconVolumeMuteVideo.classList.remove('hidden');
+          liveVideo.play().catch(e => console.error("Video play failed:", e));
+        });
       }
-    }
+    }, 600);
   }
 
-  // Initial Check
-  checkRouting();
-  window.addEventListener('hashchange', checkRouting);
-
-  // Form Submit
-  if (loginForm) {
-    loginForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (adminPassword && adminPassword.value === ACCESS_PASSWORD) {
-        localStorage.setItem('akmov_authenticated', 'true');
-        if (loginError) loginError.classList.add('hidden');
-        adminPassword.value = '';
-        window.location.hash = ''; // Clear hash to show homepage
-        checkRouting();
-      } else {
-        if (loginError) loginError.classList.remove('hidden');
-        if (adminPassword) {
-          adminPassword.value = '';
-          adminPassword.focus();
-        }
-      }
-    });
-  }
+  // Initial Portal Access
+  initPortalAccess();
 
   // ==========================================
   // 1. LIVE VIDEO PLAYER CONTROL SIMULATION

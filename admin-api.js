@@ -133,6 +133,90 @@ app.post('/owncast/restart', (req, res) => {
   });
 });
 
+// ─── YOUTUBE ON DEMAND CHANNELS CONFIGURATION ─────────────────
+const YOUTUBE_CHANNELS = [
+  '@lfrsonidoyvideo1920', // Canal principal
+  // Agrega aquí hasta 2 canales adicionales si lo deseas (máximo 3 en total)
+];
+
+// Helper to fetch and parse the first 3 videos of a channel
+async function getRecentVideosFromChannel(handle) {
+  const url = `https://www.youtube.com/${handle.startsWith('@') ? handle : '@' + handle}/videos`;
+  try {
+    const res = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8'
+      }
+    });
+    if (!res.ok) throw new Error(`HTTP error status ${res.status}`);
+    const html = await res.text();
+    const match = html.match(/var ytInitialData = ({.+?});<\/script>/) || html.match(/window\["ytInitialData"\] = ({.+?});/);
+    if (!match) return [];
+    
+    const data = JSON.parse(match[1]);
+    const tabs = data.contents?.twoColumnBrowseResultsRenderer?.tabs;
+    if (!tabs) return [];
+    
+    let videoTabContent = null;
+    for (const tab of tabs) {
+      if (tab.tabRenderer?.content?.richGridRenderer) {
+        videoTabContent = tab.tabRenderer.content.richGridRenderer.contents;
+        break;
+      }
+    }
+    if (!videoTabContent) return [];
+    
+    const videos = [];
+    for (const item of videoTabContent) {
+      const lockup = item.richItemRenderer?.content?.lockupViewModel;
+      if (!lockup) continue;
+      
+      const videoId = lockup.contentId;
+      const metaVM = lockup.metadata?.lockupMetadataViewModel;
+      if (!videoId || !metaVM) continue;
+      
+      const title = metaVM.title?.content || 'YouTube Video';
+      const parts = metaVM.metadata?.contentMetadataViewModel?.metadataRows?.[0]?.metadataParts || [];
+      const views = parts[0]?.text?.content || '';
+      const published = parts[1]?.text?.content || '';
+      
+      const thumbnail = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+      
+      videos.push({
+        id: videoId,
+        title: title,
+        thumbnail: thumbnail,
+        published: published,
+        views: views,
+        link: `https://www.youtube.com/watch?v=${videoId}`,
+        channel: handle
+      });
+      
+      // Limit to 3 videos per channel
+      if (videos.length === 3) break;
+    }
+    return videos;
+  } catch (err) {
+    console.error(`Error fetching videos for channel ${handle}:`, err);
+    return [];
+  }
+}
+
+app.get('/youtube/videos', async (req, res) => {
+  try {
+    const allVideosPromises = YOUTUBE_CHANNELS.slice(0, 3).map(handle => getRecentVideosFromChannel(handle));
+    const results = await Promise.all(allVideosPromises);
+    
+    // Flatten results array
+    const combinedVideos = results.flat();
+    
+    res.json({ success: true, videos: combinedVideos });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // ─── HEALTH CHECK ─────────────────────────────────────────────
 app.get('/', (req, res) => {
   res.json({ service: 'AKMOV Media Admin API', status: 'ok' });
