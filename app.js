@@ -237,6 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Dynamic Timecode (Simulating Broadcast Clock)
   function updateTimecode() {
+    if (!liveTimecode) return;
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
@@ -244,12 +245,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Calculate frames (00-29 based on milliseconds)
     const frames = String(Math.floor((now.getMilliseconds() / 1000) * 30)).padStart(2, '0');
     
-    if (liveTimecode) {
-      liveTimecode.textContent = `${hours}:${minutes}:${seconds}:${frames}`;
-    }
+    liveTimecode.textContent = `${hours}:${minutes}:${seconds}:${frames}`;
     requestAnimationFrame(updateTimecode);
   }
-  requestAnimationFrame(updateTimecode);
+  if (liveTimecode) {
+    requestAnimationFrame(updateTimecode);
+  }
 
 
   // ==========================================
