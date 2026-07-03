@@ -126,6 +126,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const iconPlayVideo = videoPlayPauseBtn.querySelector('.icon-play');
     const iconPauseVideo = videoPlayPauseBtn.querySelector('.icon-pause');
+    const iconVolumeHighVideo = videoMuteBtn.querySelector('.icon-volume-high');
+    const iconVolumeMuteVideo = videoMuteBtn.querySelector('.icon-volume-mute');
     
     isVideoPlaying = !isVideoPlaying;
     
@@ -136,10 +138,20 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       initVideoStream();
+      
+      // Force unmute when initiating playback
+      isVideoMuted = false;
+      liveVideo.muted = false;
+      
       if (videoVolumeSlider) {
+        if (parseFloat(videoVolumeSlider.value) === 0) {
+          videoVolumeSlider.value = 0.3; // Set to a default audible volume if previously zero
+        }
         liveVideo.volume = parseFloat(videoVolumeSlider.value);
       }
-      liveVideo.muted = isVideoMuted;
+      
+      if (iconVolumeHighVideo) iconVolumeHighVideo.classList.remove('hidden');
+      if (iconVolumeMuteVideo) iconVolumeMuteVideo.classList.add('hidden');
       
       if (mainVideoPlayer) mainVideoPlayer.classList.add('live-active');
       if (playerCover) {
@@ -525,6 +537,22 @@ document.addEventListener('DOMContentLoaded', () => {
       console.warn("No se pudieron cargar los videos de YouTube desde la API. Usando respaldo estático.", err);
     }
   })();
+
+  // Handle "Otro" checkbox in inscripción form
+  const checkInteresOtro = document.getElementById('check-interes-otro');
+  const inputInteresOtro = document.getElementById('input-interes-otro');
+  if (checkInteresOtro && inputInteresOtro) {
+    checkInteresOtro.addEventListener('change', (e) => {
+      inputInteresOtro.disabled = !e.target.checked;
+      if (e.target.checked) {
+        inputInteresOtro.focus();
+        inputInteresOtro.required = true;
+      } else {
+        inputInteresOtro.value = '';
+        inputInteresOtro.required = false;
+      }
+    });
+  }
 
 });
 
