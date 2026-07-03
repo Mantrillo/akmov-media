@@ -1317,6 +1317,309 @@ a {
   fill: currentColor;
 }
 
+/* BRUTALIST FLOATING POSTULA BUTTON */
+.brutalist-postula-float {
+  position: fixed;
+  bottom: 110px; /* Symmetrical to WhatsApp button */
+  left: 20px;
+  background-color: var(--color-white);
+  color: var(--color-black);
+  border: 2px solid var(--color-black);
+  box-shadow: 4px 4px 0 var(--color-black);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  text-decoration: none;
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 999;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast), color var(--transition-fast);
+  text-transform: uppercase;
+}
+
+.brutalist-postula-float:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--color-black);
+  background-color: var(--color-neon);
+  color: var(--color-black);
+}
+
+.postula-icon-svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+/* RECRUITMENT APPLICATION FORM STYLES */
+.postula-container {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.postula-intro-card {
+  background-color: #0b0b0b;
+  border: 2px solid var(--color-gray-border);
+  padding: 30px;
+  position: relative;
+  box-shadow: -6px 6px 0 var(--color-neon); /* Super brutalist shadow */
+}
+
+.intro-badge {
+  position: absolute;
+  top: -12px;
+  left: 20px;
+  background-color: var(--color-neon);
+  color: var(--color-black);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 2px 10px;
+  border: 2px solid var(--color-black);
+  letter-spacing: 1px;
+}
+
+.postula-intro-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  margin-bottom: 15px;
+  color: var(--color-white);
+}
+
+.intro-p {
+  font-size: 0.95rem;
+  color: #ccc;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.intro-p:last-child {
+  margin-bottom: 0;
+}
+
+.brutalist-form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  background-color: #070707;
+  border: 2px solid var(--color-gray-border);
+  padding: 40px 30px;
+}
+
+.form-block {
+  border-bottom: 2px dashed var(--color-gray-border);
+  padding-bottom: 25px;
+}
+
+.form-block:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.form-block-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--color-neon);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-block-desc {
+  font-size: 0.9rem;
+  color: var(--color-gray-text);
+  margin-bottom: 15px;
+}
+
+.brutalist-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.brutalist-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 600px) {
+  .brutalist-form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+.brutalist-input-label {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-white);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.brutalist-form-input, .brutalist-form-textarea {
+  background-color: var(--color-black);
+  color: var(--color-white);
+  border: 2px solid var(--color-gray-border);
+  padding: 12px;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.brutalist-form-input:focus, .brutalist-form-textarea:focus {
+  border-color: var(--color-neon);
+  box-shadow: -4px 4px 0 var(--color-neon);
+  outline: none;
+}
+
+/* Custom Checkboxes and Radios */
+.brutalist-options-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 5px;
+}
+
+.brutalist-checkbox-label, .brutalist-radio-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #ccc;
+  user-select: none;
+}
+
+.brutalist-checkbox, .brutalist-radio {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--color-gray-border);
+  background-color: var(--color-black);
+  margin-top: 3px;
+  cursor: pointer;
+  position: relative;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.brutalist-checkbox:checked, .brutalist-radio:checked {
+  border-color: var(--color-neon);
+  background-color: var(--color-neon);
+}
+
+.brutalist-checkbox:checked::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: 5px;
+  width: 5px;
+  height: 9px;
+  border: solid var(--color-black);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.brutalist-radio {
+  border-radius: 50%;
+}
+
+.brutalist-radio:checked::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--color-black);
+}
+
+.brutalist-radios-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 5px;
+}
+
+.brutalist-checkbox-other {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brutalist-form-input-mini {
+  background-color: var(--color-black);
+  color: var(--color-white);
+  border: 1px solid var(--color-gray-border);
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  font-family: var(--font-sans);
+  flex-grow: 1;
+}
+
+.brutalist-form-input-mini:focus {
+  border-color: var(--color-neon);
+  outline: none;
+}
+
+.brutalist-form-input-mini:disabled {
+  background-color: #111;
+  color: #555;
+  border-color: #222;
+  cursor: not-allowed;
+}
+
+/* File Upload Field */
+.brutalist-file-input {
+  background-color: var(--color-black);
+  color: var(--color-gray-text);
+  border: 2px dashed var(--color-gray-border);
+  padding: 15px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.brutalist-file-input:focus {
+  border-color: var(--color-neon);
+  outline: none;
+}
+
+/* Submit Button */
+.brutalist-form-submit {
+  background-color: var(--color-neon);
+  color: var(--color-black);
+  border: 2px solid var(--color-black);
+  box-shadow: -6px 6px 0 var(--color-black);
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 14px 28px;
+  cursor: pointer;
+  text-transform: uppercase;
+  align-self: flex-start;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.brutalist-form-submit:hover {
+  transform: translate(2px, -2px);
+  box-shadow: -8px 8px 0 var(--color-black);
+  background-color: var(--color-white);
+  color: var(--color-black);
+}
+
 /* HELPER CLASS FOR HIDDEN ELEMENTS */
 .hidden {
   display: none !important;
