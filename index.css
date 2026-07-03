@@ -1281,6 +1281,42 @@ a {
   100% { transform: translate3d(-50%, 0, 0); }
 }
 
+/* BRUTALIST FLOATING WHATSAPP BUTTON */
+.brutalist-whatsapp-float {
+  position: fixed;
+  bottom: 110px; /* Above the sticky player bar */
+  right: 20px;
+  background-color: var(--color-neon);
+  color: var(--color-black);
+  border: 2px solid var(--color-black);
+  box-shadow: -4px 4px 0 var(--color-black);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  text-decoration: none;
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 999;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast), color var(--transition-fast);
+  text-transform: uppercase;
+}
+
+.brutalist-whatsapp-float:hover {
+  transform: translate(2px, -2px);
+  box-shadow: -6px 6px 0 var(--color-black);
+  background-color: var(--color-white);
+  color: var(--color-black);
+}
+
+.whatsapp-icon-svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
 /* HELPER CLASS FOR HIDDEN ELEMENTS */
 .hidden {
   display: none !important;
