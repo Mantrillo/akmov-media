@@ -682,6 +682,7 @@ a {
 .card-spotify { background-color: #1ed760; }
 .card-instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%); }
 .card-facebook { background-color: #1877f2; }
+.card-discord { background-color: #5865f2; }
 
 /* PROGRAMACION & EXTRA SECTIONS */
 .content-section {
@@ -1814,6 +1815,7 @@ a {
 .circle-spotify { background-color: #1ed760; }
 .circle-instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%); }
 .circle-facebook { background-color: #1877f2; }
+.circle-discord { background-color: #5865f2; }
 
 /* LOGIN SCREEN STYLES */
 .login-view {
