@@ -326,7 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
       liveAudioStream.muted = isAudioMuted;
 
       liveAudioStream.play().then(() => {
-        audioTrackName.textContent = "TRANSMITIENDO EN VIVO • AUDIO DE LA TRANSMISIÓN DIGITAL HD • HQ AUDIO";
+        updatePlayerUI();
         audioTrackName.style.color = "var(--color-neon)";
       }).catch(err => {
         console.warn("Autoplay block or streaming offline. error:", err);
@@ -361,8 +361,60 @@ document.addEventListener('DOMContentLoaded', () => {
       // Turntable animation inactive
       if (vinylPlatter) vinylPlatter.classList.remove('playing');
       if (turntableTonearm) turntableTonearm.classList.remove('playing');
+
+      // Reset vinyl label image
+      const vinylLabel = document.querySelector('.vinyl-label');
+      if (vinylLabel) {
+        vinylLabel.style.backgroundImage = 'none';
+        const star = vinylLabel.querySelector('.vinyl-logo-star');
+        if (star) star.style.opacity = '1';
+      }
     }
   }
+
+  let nowPlayingData = null;
+
+  async function fetchNowPlaying() {
+    try {
+      const response = await fetch('/now-playing');
+      if (response.ok) {
+        nowPlayingData = await response.json();
+        updatePlayerUI();
+      }
+    } catch (e) {
+      console.warn("Error fetching now-playing:", e);
+    }
+  }
+
+  function updatePlayerUI() {
+    if (!isAudioPlaying) return;
+    
+    if (nowPlayingData && nowPlayingData.title && nowPlayingData.title !== 'Transmisión Online') {
+      const artistStr = nowPlayingData.artist ? `${nowPlayingData.artist} - ` : '';
+      audioTrackName.textContent = `${artistStr}${nowPlayingData.title} • AUDIO DIGITAL HD`;
+    } else {
+      audioTrackName.textContent = "TRANSMITIENDO EN VIVO • AUDIO DE LA TRANSMISIÓN DIGITAL HD • HQ AUDIO";
+    }
+
+    const vinylLabel = document.querySelector('.vinyl-label');
+    if (vinylLabel) {
+      if (nowPlayingData && nowPlayingData.cover && isAudioPlaying) {
+        vinylLabel.style.backgroundImage = `url(${nowPlayingData.cover})`;
+        vinylLabel.style.backgroundSize = 'cover';
+        vinylLabel.style.backgroundPosition = 'center';
+        const star = vinylLabel.querySelector('.vinyl-logo-star');
+        if (star) star.style.opacity = '0';
+      } else {
+        vinylLabel.style.backgroundImage = 'none';
+        const star = vinylLabel.querySelector('.vinyl-logo-star');
+        if (star) star.style.opacity = '1';
+      }
+    }
+  }
+
+  // Poll now playing every 5 seconds
+  setInterval(fetchNowPlaying, 5000);
+  fetchNowPlaying();
 
   audioPlayPauseBtn.addEventListener('click', toggleAudioPlayback);
   footerListenBtn.addEventListener('click', toggleAudioPlayback);
