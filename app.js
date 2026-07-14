@@ -446,24 +446,42 @@ document.addEventListener('DOMContentLoaded', () => {
     }).join('');
   }
 
+  // Fallback: programación por defecto de los 6 bloques AutoDJ
+  const defaultSlots = [
+    { start: '00:00', end: '08:00', title: 'BLOQUE_TRASNOCHE', desc: 'Música Chill / Selección ambiental variada', type: 'autodj' },
+    { start: '08:00', end: '12:00', title: 'BLOQUE_REGGAE_HIPHOP', desc: 'Música: Reggae, Ska y Hip-hop consciente', type: 'autodj' },
+    { start: '12:00', end: '15:00', title: 'BLOQUE_CUMBIA', desc: 'Música: Cumbia regional y folclor andino', type: 'autodj' },
+    { start: '15:00', end: '18:00', title: 'BLOQUE_ROCK', desc: 'Música: Rock local, Blues y Metal', type: 'autodj' },
+    { start: '18:00', end: '21:00', title: 'BLOQUE_URBANO', desc: 'Música: Hip-hop, Trap local y Dub', type: 'autodj' },
+    { start: '21:00', end: '00:00', title: 'BLOQUE_ESTELARES', desc: 'Música variada/instrumental + Videos de Drone', type: 'autodj' }
+  ];
+
   try {
     const res  = await fetch(AKMOV_API_BASE + '/schedule');
     const data = await res.json();
     if (data && Array.isArray(data.schedule) && data.schedule.length > 0) {
-      renderPublicSchedule(data.schedule);
+      // Fusionar grilla predefinida con programas personalizados (ej. EN VIVO)
+      let merged = [...defaultSlots];
+      
+      data.schedule.forEach(slot => {
+        // Buscar si hay algún bloque por defecto que coincida exactamente en el horario
+        const duplicate = merged.find(m => m.start === slot.start && m.end === slot.end);
+        if (!duplicate) {
+          merged.push(slot);
+        } else {
+          // Si coincide el horario, el programa personalizado reemplaza al por defecto
+          const idx = merged.indexOf(duplicate);
+          merged[idx] = slot;
+        }
+      });
+
+      renderPublicSchedule(merged);
       return;
     }
-  } catch { /* API no disponible */ }
+  } catch (err) {
+    console.warn("No se pudo cargar la programación desde la API, usando grilla estática.", err);
+  }
 
-  // Fallback: programación por defecto
-  const defaultSlots = [
-    { start: '06:00', end: '09:00', title: 'AKMOV MAÑANA', desc: 'Información y música para empezar el día.', type: 'autodj' },
-    { start: '10:00', end: '12:00', title: 'EL HUASCO DESPIERTA', desc: 'Noticias locales y entrevistas.', type: 'live' },
-    { start: '14:00', end: '16:00', title: 'TARDE EN EL HUASCO', desc: 'Música variada y clásicos.', type: 'autodj' },
-    { start: '18:00', end: '20:00', title: 'AKMOV BEATS SESSION', desc: 'Conduce: DJ Vektor', type: 'live' },
-    { start: '20:00', end: '22:00', title: 'EL HUASCO ROCKS', desc: 'Especial de bandas locales y rock.', type: 'next' },
-    { start: '22:00', end: '00:00', title: 'NIGHTWAVE RADAR', desc: 'Synthwave y sonidos nocturnos.', type: 'autodj' },
-  ];
   renderPublicSchedule(defaultSlots);
 })();
   // ==========================================
