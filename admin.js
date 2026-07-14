@@ -380,7 +380,7 @@ function renderSchedule() {
       <span class="slot-time">${slot.start} → ${slot.end}</span>
       <span class="slot-tag ${slot.type}">${typeLabel(slot.type)}</span>
       <div class="slot-info">
-        <div class="slot-title">${slot.title}</div>
+        <div class="slot-title">${slot.title}${slot.host ? ` <span style="font-size:0.8em;color:var(--text-muted);font-weight:normal;">(Locutor: ${slot.host})</span>` : ''}</div>
         <div class="slot-desc">${slot.desc}</div>
       </div>
       <button class="slot-delete" data-index="${scheduleData.indexOf(slot)}" title="Eliminar">
@@ -432,6 +432,7 @@ confirmSlot.addEventListener('click', () => {
   const start = document.getElementById('slotStart').value;
   const end   = document.getElementById('slotEnd').value;
   const title = document.getElementById('slotTitle').value.trim().toUpperCase();
+  const host  = document.getElementById('slotHost').value.trim();
   const desc  = document.getElementById('slotDesc').value.trim();
   const type  = document.getElementById('slotType').value;
 
@@ -440,7 +441,7 @@ confirmSlot.addEventListener('click', () => {
     return;
   }
 
-  scheduleData.push({ start, end, title, desc, type });
+  scheduleData.push({ start, end, title, host, desc, type });
   renderSchedule();
   saveHint.textContent = '⚠ Cambios sin guardar';
   slotModal.classList.add('hidden');
@@ -452,6 +453,7 @@ function clearModal() {
   document.getElementById('slotStart').value = '';
   document.getElementById('slotEnd').value   = '';
   document.getElementById('slotTitle').value = '';
+  document.getElementById('slotHost').value  = '';
   document.getElementById('slotDesc').value  = '';
   document.getElementById('slotType').value  = 'live';
 }
