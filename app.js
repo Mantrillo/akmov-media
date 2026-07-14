@@ -554,5 +554,79 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Interceptar formulario de postulación e integrar con la API de Discord
+  const postulaForm = document.querySelector('.brutalist-form');
+  if (postulaForm) {
+    postulaForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const submitBtn = postulaForm.querySelector('.brutalist-form-submit');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'ENVIANDO POSTULACIÓN...';
+      }
+
+      const formData = new FormData(postulaForm);
+      
+      const intereses = [];
+      postulaForm.querySelectorAll('input[name="Intereses[]"]:checked').forEach(cb => {
+        intereses.push(cb.value);
+      });
+      
+      const herramientas = [];
+      postulaForm.querySelectorAll('input[name="Herramientas[]"]:checked').forEach(cb => {
+        herramientas.push(cb.value);
+      });
+
+      const payload = {
+        Nombre: formData.get('Nombre Completo'),
+        Edad: parseInt(formData.get('Edad'), 10) || null,
+        Ciudad: formData.get('Ciudad/Localidad'),
+        Contacto: formData.get('Contacto'),
+        RedSocial: formData.get('Red Social'),
+        Intereses: intereses,
+        Intereses_Otro: formData.get('Intereses_Otro'),
+        Experiencia: formData.get('Experiencia'),
+        NombrePrograma: formData.get('Nombre Programa Tentativo'),
+        Idea: formData.get('Idea de Programa'),
+        Coanimador: formData.get('Coanimador'),
+        Modalidad: formData.get('Modalidad'),
+        Herramientas: herramientas,
+        Disponibilidad: formData.get('Disponibilidad Horaria'),
+        EnlacePitch: formData.get('Enlace Pitch')
+      };
+
+      try {
+        const res = await fetch(AKMOV_API_BASE + '/inscripciones', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+        if (result && result.success) {
+          alert('¡Tu inscripción ha sido recibida! El Staff de AKMOV Media la revisará en el canal de Discord y se contactará contigo a la brevedad. 🎸');
+          postulaForm.reset();
+          if (inputInteresOtro) {
+            inputInteresOtro.disabled = true;
+            inputInteresOtro.value = '';
+          }
+        } else {
+          alert('Hubo un error al procesar tu postulación: ' + (result.error || 'Inténtalo de nuevo.'));
+        }
+      } catch (err) {
+        console.error('Error enviando formulario:', err);
+        alert('No se pudo establecer conexión con el servidor de inscripciones. Inténtalo más tarde.');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'ENVIAR MI INSCRIPCIÓN';
+        }
+      }
+    });
+  }
+
 });
+
 
