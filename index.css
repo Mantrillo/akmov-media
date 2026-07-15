@@ -209,6 +209,43 @@ a {
   aspect-ratio: 16 / 9;
   background-color: #050505;
   overflow: hidden; /* Crop status bar area at the bottom */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.live-video-element {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain; /* Respeta la relación de aspecto sin deformar ni recortar */
+}
+
+/* Soporte para Pantalla Completa Responsiva */
+.live-player:fullscreen {
+  width: 100% !important;
+  height: 100% !important;
+  aspect-ratio: auto;
+  background-color: #000;
+}
+
+.live-player:fullscreen .live-video-element {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.live-player:-webkit-full-screen {
+  width: 100% !important;
+  height: 100% !important;
+  aspect-ratio: auto;
+  background-color: #000;
+}
+
+.live-player:-webkit-full-screen .live-video-element {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .live-player iframe {
