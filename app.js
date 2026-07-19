@@ -699,4 +699,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
+// ==========================================
+// 4. GOOGLE CAST (CHROMECAST) INTEGRATION
+// ==========================================
+window.__onGCastApiAvailable = function(isAvailable) {
+  if (isAvailable) {
+    const castBtn = document.getElementById('videoCastBtn');
+    if (castBtn) {
+      castBtn.style.display = 'inline-block';
+    }
+
+    cast.framework.CastContext.getInstance().setOptions({
+      receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+      autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
+    });
+
+    const context = cast.framework.CastContext.getInstance();
+    context.addEventListener(
+      cast.framework.CastContextEventType.SESSION_STATE_CHANGED,
+      function(event) {
+        if (event.sessionState === cast.framework.SessionState.SESSION_STARTED) {
+          const session = context.getCurrentSession();
+          if (session) {
+            const STREAM_URL = "https://stream.akmovmedia.com/hls/stream.m3u8";
+            const mediaInfo = new chrome.cast.media.MediaInfo(STREAM_URL, 'application/x-mpegurl');
+            mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
+            mediaInfo.metadata.title = 'AKMOV MEDIA';
+            mediaInfo.metadata.subtitle = 'Señal de TV en Vivo';
+            
+            const request = new chrome.cast.media.LoadRequest(mediaInfo);
+            session.loadMedia(request).then(
+              function() {
+                console.log('Chromecast: Cast started successfully.');
+                const localVideo = document.getElementById('liveVideo');
+                if (localVideo) {
+                  localVideo.pause();
+                }
+              },
+              function(errorCode) { console.warn('Chromecast: Cast failed: ' + errorCode); }
+            );
+          }
+        }
+      }
+    );
+  }
+};
+
 

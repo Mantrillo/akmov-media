@@ -2601,5 +2601,19 @@ a {
   text-transform: uppercase;
 }
 
+/* Google Cast Button */
+#videoCastBtn {
+  --connected-color: var(--color-neon);
+  --disconnected-color: var(--color-white);
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: middle;
+  transition: var(--transition-fast);
+}
+
+#videoCastBtn:hover {
+  --disconnected-color: var(--color-neon);
+}
+
 
 
