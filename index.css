@@ -2603,8 +2603,10 @@ a {
 
 /* Google Cast Button */
 #videoCastBtn {
-  --connected-color: var(--color-neon);
-  --disconnected-color: var(--color-white);
+  --connected-color: #00ff00 !important;
+  --disconnected-color: #ffffff !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
   cursor: pointer;
   display: inline-block;
   vertical-align: middle;
@@ -2612,7 +2614,7 @@ a {
 }
 
 #videoCastBtn:hover {
-  --disconnected-color: var(--color-neon);
+  --disconnected-color: #00ff00 !important;
 }
 
 
